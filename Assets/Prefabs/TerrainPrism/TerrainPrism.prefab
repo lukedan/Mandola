@@ -12,7 +12,8 @@ GameObject:
   - component: {fileID: 311617661289385746}
   - component: {fileID: 220146605392887385}
   - component: {fileID: 5667733477920262377}
-  m_Layer: 0
+  - component: {fileID: -3089340393259791869}
+  m_Layer: 8
   m_Name: TerrainPrism
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,3 +95,17 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -6875603191141184912, guid: 222660caeacec0444a7a342ff97b83fe, type: 3}
+--- !u!114 &-3089340393259791869
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7074779291304004680}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3b4e6e27d729ba43b1d3a6475c01e06, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LevelGap: 1
+  MovingSpeed: 1
