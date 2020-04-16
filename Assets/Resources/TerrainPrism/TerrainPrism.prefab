@@ -108,4 +108,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   LevelGap: 1
-  MovingSpeed: 1
+  MovingSpeed: 3
