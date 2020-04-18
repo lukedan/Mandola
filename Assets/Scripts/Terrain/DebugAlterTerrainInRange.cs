@@ -1,8 +1,16 @@
-﻿using System.Collections;
+﻿using Photon.Pun;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class DebugAlterTerrainInRange : MonoBehaviour {
+	private PhotonView PV;
+
+	private void Start()
+	{
+		PV = GetComponent<PhotonView>();
+	}
+
 	void Update() {
 		if (Input.GetMouseButtonDown(0)) {
 			Physics.Raycast(
@@ -11,8 +19,15 @@ public class DebugAlterTerrainInRange : MonoBehaviour {
 			);
 			if (hit.collider != null) {
 				bool change = Input.GetKey(KeyCode.LeftControl);
-				Utils.AlterTerrainInCylinder(new Vector2(hit.point.x, hit.point.z), 5.0f, change ? -1 : 1);
+				//Utils.AlterTerrainInCylinder(new Vector2(hit.point.x, hit.point.z), 5.0f, change ? -1 : 1);
+				PV.RPC("RPC_AlterTerrain", RpcTarget.AllBuffered, new Vector2(hit.point.x, hit.point.z), 5.0f, change);
 			}
 		}
+	}
+
+	[PunRPC]
+	void RPC_AlterTerrain(Vector2 v, float y, bool change)
+	{
+		Utils.AlterTerrainInCylinder(v, y, change ? -1 : 1);
 	}
 }
