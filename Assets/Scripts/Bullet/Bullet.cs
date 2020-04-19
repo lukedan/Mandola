@@ -37,6 +37,11 @@ public class Bullet : MonoBehaviour {
 
 	void Start() {
 		PV = GetComponent<PhotonView>();
+		if (!PV.IsMine) { // only update for the owner
+			enabled = false;
+			return;
+		}
+
 		_rigidBody = GetComponent<Rigidbody>();
 
 		Light.color = BulletColor;
@@ -60,22 +65,20 @@ public class Bullet : MonoBehaviour {
 
 	private void FixedUpdate() {
 		// raycast for player hits
-		if (PV.IsMine) {
-			Vector3 pos = transform.position;
-			Collider[] cols = Physics.OverlapCapsule(_prevPosition, pos, _radius, 1 << Utils.PlayerLayer);
-			if (cols.Length > 0) {
-				Collider minCol = cols[0];
-				float minDist = float.MaxValue;
-				foreach (Collider c in cols) {
-					float dist = (c.transform.position - pos).sqrMagnitude;
-					if (dist < minDist) {
-						minDist = dist;
-						minCol = c;
-					}
+		Vector3 pos = transform.position;
+		Collider[] cols = Physics.OverlapCapsule(_prevPosition, pos, _radius, 1 << Utils.PlayerLayer);
+		if (cols.Length > 0) {
+			Collider minCol = cols[0];
+			float minDist = float.MaxValue;
+			foreach (Collider c in cols) {
+				float dist = (c.transform.position - _prevPosition).sqrMagnitude;
+				if (dist < minDist) {
+					minDist = dist;
+					minCol = c;
 				}
-				// TODO send message to minCol
-				PhotonNetwork.Destroy(gameObject);
 			}
+			// TODO send message to minCol
+			PhotonNetwork.Destroy(gameObject);
 		}
 	}
 

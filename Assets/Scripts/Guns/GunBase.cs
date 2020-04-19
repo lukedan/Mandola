@@ -1,8 +1,19 @@
-﻿using System.Collections;
+﻿using Photon.Pun;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class GunBase : MonoBehaviour {
+	private PhotonView _network;
+
+	private void Start() {
+		_network = GetComponent<PhotonView>();
+		if (!_network.IsMine) {
+			enabled = false;
+			return;
+		}
+	}
+
 	private void Update() {
 		if (Input.GetButton("Reload")) {
 			Reload();
