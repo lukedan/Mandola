@@ -70,6 +70,11 @@ public class BasicGun : GunBase {
 
 	void Start() {
 		PV = GetComponent<PhotonView>();
+		if (!PV.IsMine) {
+			enabled = false;
+			return;
+		}
+
 		_instantReload();
 	}
 
