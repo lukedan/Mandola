@@ -112,15 +112,15 @@ public class BasicGun : GunBase {
 
 					// fire bullet
 					Vector3 gunPos = transform.position, direction = (aim - gunPos).normalized;
-					//GameObject bullet = Instantiate(BulletPrefab, gunPos + direction * FireOffset, Quaternion.identity);
-					//Rigidbody rigidbody = bullet.GetComponent<Rigidbody>();
-					//if (rigidbody) {
-					//	rigidbody.velocity = direction * BulletSpeed;
-					//}
-					if(PV.IsMine)
+					GameObject bullet = PhotonNetwork.Instantiate("Bullet", gunPos + direction * FireOffset, Quaternion.identity);
+					Rigidbody rigidbody = bullet.GetComponent<Rigidbody>();
+					if (rigidbody) {
+						rigidbody.velocity = direction * BulletSpeed;
+					}
+					/*if (PV.IsMine)
 					{
 						PV.RPC("RPC_FireBullet", RpcTarget.AllBuffered, gunPos, direction);
-					}
+					}*/
 
 					_inaccuracy = Mathf.Min(MaximumInaccuracy, _inaccuracy + ShootInaccuracy);
 					--_numClipBullets;
@@ -135,7 +135,7 @@ public class BasicGun : GunBase {
 		}
 	}
 
-	[PunRPC]
+	/*[PunRPC]
 	void RPC_FireBullet(Vector3 gunPos, Vector3 direction)
 	{
 		GameObject bullet = Instantiate(BulletPrefab, gunPos + direction * FireOffset, Quaternion.identity);
@@ -144,5 +144,5 @@ public class BasicGun : GunBase {
 		{
 			rigidbody.velocity = direction * BulletSpeed;
 		}
-	}
+	}*/
 }
