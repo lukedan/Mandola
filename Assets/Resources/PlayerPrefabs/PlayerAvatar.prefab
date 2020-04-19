@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 5561496149052906836}
   - component: {fileID: 2272352830137483709}
   - component: {fileID: 3645931372282962622}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: PlayerAvatar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -161,6 +161,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1447078242821564886}
     m_Modifications:
+    - target: {fileID: -1575506087322404561, guid: 2b0b22728e06c9c4893961561cad4f40,
+        type: 3}
+      propertyPath: ObservedComponents.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 745114428927212277, guid: 2b0b22728e06c9c4893961561cad4f40,
+        type: 3}
+      propertyPath: NumReserveBullets
+      value: 10000000
+      objectReference: {fileID: 0}
     - target: {fileID: 6504773663042107300, guid: 2b0b22728e06c9c4893961561cad4f40,
         type: 3}
       propertyPath: m_Name

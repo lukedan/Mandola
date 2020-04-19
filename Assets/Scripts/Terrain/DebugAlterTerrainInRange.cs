@@ -15,7 +15,7 @@ public class DebugAlterTerrainInRange : MonoBehaviour {
 		if (Input.GetButtonDown("Ability")) {
 			Physics.Raycast(
 				Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit hit,
-				float.PositiveInfinity, ~Utils.TerrainLayerMask
+				float.PositiveInfinity, 1 << Utils.TerrainLayer
 			);
 			if (hit.collider != null) {
 				bool change = Input.GetKey(KeyCode.LeftControl);

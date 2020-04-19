@@ -10,7 +10,7 @@ public abstract class GunBase : MonoBehaviour {
 
 		Vector3 aimPos = new Vector3();
 		Ray traceRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-		if (Physics.Raycast(traceRay, out RaycastHit hit, float.PositiveInfinity, ~Utils.TerrainLayerMask)) {
+		if (Physics.Raycast(traceRay, out RaycastHit hit, float.PositiveInfinity, 1 << Utils.TerrainLayer)) {
 			aimPos = hit.point + new Vector3(0.0f, transform.localPosition.y, 0.0f);
 		}
 		UpdateGun(aimPos, Time.deltaTime);

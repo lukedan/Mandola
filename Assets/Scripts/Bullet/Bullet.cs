@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Experimental.GlobalIllumination;
+using UnityEngine.UIElements;
 
 public class Bullet : MonoBehaviour {
 	/// <summary>
@@ -53,7 +54,13 @@ public class Bullet : MonoBehaviour {
 	}
 
 	private void OnCollisionEnter(Collision collision) {
-		// TODO detect collision with player
 		++_bounces;
+		// detect collision with player
+		if (collision.gameObject.layer == Utils.PlayerLayer) {
+			if (PV.IsMine) {
+				// TODO send rpc
+				Destroy(gameObject);
+			}
+		}
 	}
 }

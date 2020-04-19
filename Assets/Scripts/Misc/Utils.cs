@@ -6,7 +6,9 @@ public static class Utils {
 	/// <summary>
 	/// Layer mask for terrain.
 	/// </summary>
-	public static readonly int TerrainLayerMask = LayerMask.NameToLayer("Terrain");
+	public static readonly int
+		TerrainLayer = LayerMask.NameToLayer("Terrain"),
+		PlayerLayer = LayerMask.NameToLayer("Player");
 
 	/// <summary>
 	/// Alters all prisms in the specified range.
@@ -17,7 +19,7 @@ public static class Utils {
 	public static void AlterTerrainInCylinder(Vector2 center, float radius, int change) {
 		Collider[] cols = Physics.OverlapCapsule(
 			new Vector3(center.x, -200.0f, center.y), new Vector3(center.x, 200.0f, center.y), radius,
-			~TerrainLayerMask
+			1 << TerrainLayer
 		);
 		foreach (Collider c in cols) {
 			PrismMover mover = c.GetComponent<PrismMover>();
