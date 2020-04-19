@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 5561496149052906836}
   - component: {fileID: 2272352830137483709}
   - component: {fileID: 3645931372282962622}
+  - component: {fileID: 6815913779286827142}
   m_Layer: 10
   m_Name: PlayerAvatar
   m_TagString: Untagged
@@ -119,7 +120,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
+  m_SynchronizeRotation: 0
   m_SynchronizeScale: 0
 --- !u!143 &2272352830137483709
 CharacterController:
@@ -154,6 +155,22 @@ MonoBehaviour:
   MaximumVelocity: 7
   Gravity: 30
   Acceleration: 80
+--- !u!114 &6815913779286827142
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5347505519682252453}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e310e771c2cf28e48ac2d44915fe10a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Health: 1
+  HealthRegen: 0.1
+  DamageEffectExaggeration: 0.3
+  DamageEffectRecovery: 0.1
 --- !u!1001 &7263352566171960429
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -170,6 +187,11 @@ PrefabInstance:
         type: 3}
       propertyPath: NumReserveBullets
       value: 10000000
+      objectReference: {fileID: 0}
+    - target: {fileID: 745114428927212277, guid: 2b0b22728e06c9c4893961561cad4f40,
+        type: 3}
+      propertyPath: BulletDamage
+      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: 6504773663042107300, guid: 2b0b22728e06c9c4893961561cad4f40,
         type: 3}

@@ -249,11 +249,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7efd75887b6f2d647b022711a27d2bc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BulletColor: {r: 0, g: 1, b: 1, a: 0}
-  BulletColorIntensity: 1
   Light: {fileID: 2634735121876468508}
   MeshRenderer: {fileID: 405857340734856447}
   VisualTransform: {fileID: 8665401547593633532}
+  Damage: 0
 --- !u!114 &-4694021020779369204
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -289,5 +288,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
+  m_SynchronizeRotation: 0
   m_SynchronizeScale: 0

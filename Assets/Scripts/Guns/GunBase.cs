@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// NOTE: if you're going to inherit from this, DO NOT reimplement the update() function. Override UpdateGun() and
+// Reload() instead.
 public abstract class GunBase : MonoBehaviour {
-	private PhotonView _network;
-
 	private void Update() {
 		if (Input.GetButton("Reload")) {
 			Reload();

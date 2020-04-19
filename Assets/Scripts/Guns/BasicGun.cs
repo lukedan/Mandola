@@ -25,6 +25,10 @@ public class BasicGun : GunBase {
 	public float ReloadTime = 3.0f;
 
 	/// <summary>
+	/// The distance with respect to which the accuracy is computed.
+	/// </summary>
+	public float AccuracyDistance = 10.0f;
+	/// <summary>
 	/// Inaccuracy caused by each shot.
 	/// </summary>
 	public float ShootInaccuracy = 0.1f;
@@ -37,6 +41,18 @@ public class BasicGun : GunBase {
 	/// </summary>
 	public float AccuracyRestore = 1.0f;
 
+	/// <summary>
+	/// The color of this bullet.
+	/// </summary>
+	public Color BulletColor;
+	/// <summary>
+	/// The color intensity of this bullet.
+	/// </summary>
+	public float BulletColorIntensity = 1.0f;
+	/// <summary>
+	/// Bullet damage.
+	/// </summary>
+	public float BulletDamage = 0.1f;
 	/// <summary>
 	/// The bullet. It must have a rigid body.
 	/// </summary>
@@ -65,15 +81,19 @@ public class BasicGun : GunBase {
 	private float _fireCooldown = 0.0f;
 	private bool _freshTrigger = true;
 
-	private PhotonView PV;
+	private CharacterController _parentVelocity;
+
+	private PhotonView _network;
 
 
 	void Start() {
-		PV = GetComponent<PhotonView>();
-		if (!PV.IsMine) {
+		Transform parent = transform.parent;
+		_network = parent.GetComponent<PhotonView>();
+		if (!_network.IsMine) {
 			enabled = false;
 			return;
 		}
+		_parentVelocity = parent.GetComponent<CharacterController>();
 
 		_instantReload();
 	}
@@ -104,6 +124,7 @@ public class BasicGun : GunBase {
 			if (!IsReloading) {
 				_instantReload();
 				_fireCooldown = 0.0f;
+				_inaccuracy = 0.0f;
 			}
 		} else { // try to fire
 			_fireCooldown -= deltaTime;
@@ -117,15 +138,17 @@ public class BasicGun : GunBase {
 
 					// fire bullet
 					Vector3 gunPos = transform.position, direction = (aim - gunPos).normalized;
-					GameObject bullet = PhotonNetwork.Instantiate("Bullet", gunPos + direction * FireOffset, Quaternion.identity);
-					Rigidbody rigidbody = bullet.GetComponent<Rigidbody>();
-					if (rigidbody) {
-						rigidbody.velocity = direction * BulletSpeed;
-					}
-					/*if (PV.IsMine)
-					{
-						PV.RPC("RPC_FireBullet", RpcTarget.AllBuffered, gunPos, direction);
-					}*/
+					direction = direction * AccuracyDistance + UnityEngine.Random.insideUnitSphere * _inaccuracy;
+					direction = direction.normalized;
+					GameObject bullet = PhotonNetwork.Instantiate(
+						"Bullet", gunPos + direction * FireOffset, Quaternion.identity, 0,
+						new object[] {
+							BulletColor.r, BulletColor.g, BulletColor.b, BulletColor.a, BulletColorIntensity
+						}
+					);
+					// TODO if the players are not happy with this non-WYSIWYG velocity, compensate for player velocity
+					bullet.GetComponent<Rigidbody>().velocity = direction * BulletSpeed + _parentVelocity.velocity;
+					bullet.GetComponent<Bullet>().Damage = BulletDamage;
 
 					_inaccuracy = Mathf.Min(MaximumInaccuracy, _inaccuracy + ShootInaccuracy);
 					--_numClipBullets;
@@ -139,15 +162,4 @@ public class BasicGun : GunBase {
 			}
 		}
 	}
-
-	/*[PunRPC]
-	void RPC_FireBullet(Vector3 gunPos, Vector3 direction)
-	{
-		GameObject bullet = Instantiate(BulletPrefab, gunPos + direction * FireOffset, Quaternion.identity);
-		Rigidbody rigidbody = bullet.GetComponent<Rigidbody>();
-		if (rigidbody)
-		{
-			rigidbody.velocity = direction * BulletSpeed;
-		}
-	}*/
 }
