@@ -12,7 +12,7 @@ public class DebugAlterTerrainInRange : MonoBehaviour {
 	}
 
 	void Update() {
-		if (Input.GetMouseButtonDown(0)) {
+		if (Input.GetButtonDown("Ability")) {
 			Physics.Raycast(
 				Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit hit,
 				float.PositiveInfinity, ~Utils.TerrainLayerMask
