@@ -59,7 +59,7 @@ public class Bullet : MonoBehaviour {
 		if (collision.gameObject.layer == Utils.PlayerLayer) {
 			if (PV.IsMine) {
 				// TODO send rpc
-				Destroy(gameObject);
+				PhotonNetwork.Destroy(gameObject);
 			}
 		}
 	}
