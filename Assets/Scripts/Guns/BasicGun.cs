@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Photon.Pun;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -64,8 +65,11 @@ public class BasicGun : GunBase {
 	private float _fireCooldown = 0.0f;
 	private bool _freshTrigger = true;
 
+	private PhotonView PV;
+
 
 	void Start() {
+		PV = GetComponent<PhotonView>();
 		_instantReload();
 	}
 
@@ -108,10 +112,14 @@ public class BasicGun : GunBase {
 
 					// fire bullet
 					Vector3 gunPos = transform.position, direction = (aim - gunPos).normalized;
-					GameObject bullet = Instantiate(BulletPrefab, gunPos + direction * FireOffset, Quaternion.identity);
-					Rigidbody rigidbody = bullet.GetComponent<Rigidbody>();
-					if (rigidbody) {
-						rigidbody.velocity = direction * BulletSpeed;
+					//GameObject bullet = Instantiate(BulletPrefab, gunPos + direction * FireOffset, Quaternion.identity);
+					//Rigidbody rigidbody = bullet.GetComponent<Rigidbody>();
+					//if (rigidbody) {
+					//	rigidbody.velocity = direction * BulletSpeed;
+					//}
+					if(PV.IsMine)
+					{
+						PV.RPC("RPC_FireBullet", RpcTarget.AllBuffered, gunPos, direction);
 					}
 
 					_inaccuracy = Mathf.Min(MaximumInaccuracy, _inaccuracy + ShootInaccuracy);
@@ -124,6 +132,17 @@ public class BasicGun : GunBase {
 				_fireCooldown = Mathf.Max(_fireCooldown, 0.0f);
 				_freshTrigger = true;
 			}
+		}
+	}
+
+	[PunRPC]
+	void RPC_FireBullet(Vector3 gunPos, Vector3 direction)
+	{
+		GameObject bullet = Instantiate(BulletPrefab, gunPos + direction * FireOffset, Quaternion.identity);
+		Rigidbody rigidbody = bullet.GetComponent<Rigidbody>();
+		if (rigidbody)
+		{
+			rigidbody.velocity = direction * BulletSpeed;
 		}
 	}
 }

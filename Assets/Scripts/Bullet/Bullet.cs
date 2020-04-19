@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Photon.Pun;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Experimental.GlobalIllumination;
@@ -28,7 +29,10 @@ public class Bullet : MonoBehaviour {
 	private Rigidbody _rigidBody;
 	private int _bounces = 0;
 
+	private PhotonView PV;
+
 	void Start() {
+		PV = GetComponent<PhotonView>();
 		_rigidBody = GetComponent<Rigidbody>();
 
 		Light.color = BulletColor;
