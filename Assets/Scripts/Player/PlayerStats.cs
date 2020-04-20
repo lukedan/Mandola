@@ -21,16 +21,29 @@ public class PlayerStats : MonoBehaviour {
 	/// The duration of damage effect.
 	/// </summary>
 	public float DamageEffectRecovery = 3.0f;
+	/// <summary>
+	/// The maximum damage effect value, except for when it's exaggerated after being hit.
+	/// </summary>
+	public float DamageEffectAtMinimumHealth = 1.0f;
+	/// <summary>
+	/// Clamp the effect below this value.
+	/// </summary>
+	public float DamageEffectClamp = 3.0f;
+
+	/// <summary>
+	/// The post processing volume.
+	/// </summary>
+	public PostProcessVolume PostProcessVolume;
 
 	private ChromaticAberration _damageEffect;
 
 	private void Start() {
-		Camera.main.GetComponent<PostProcessVolume>().profile.TryGetSettings(out _damageEffect);
+		PostProcessVolume.profile.TryGetSettings(out _damageEffect);
 	}
 
 	private void Update() {
 		Health = Mathf.Min(1.0f, Health + HealthRegen * Time.deltaTime);
-		float effectTarget = 1.0f - Health;
+		float effectTarget = (1.0f - Health) * DamageEffectAtMinimumHealth;
 		_damageEffect.intensity.Override(Mathf.Max(
 			effectTarget, _damageEffect.intensity.value - Time.deltaTime * DamageEffectRecovery
 		));
@@ -39,6 +52,7 @@ public class PlayerStats : MonoBehaviour {
 	[PunRPC]
 	public void OnHit(float damage) {
 		Health -= damage;
-		_damageEffect.intensity.Override(1.0f - Health + DamageEffectExaggeration);
+		float val = _damageEffect.intensity.GetValue<float>();
+		_damageEffect.intensity.Override(Mathf.Min(val + DamageEffectExaggeration, DamageEffectClamp));
 	}
 }
