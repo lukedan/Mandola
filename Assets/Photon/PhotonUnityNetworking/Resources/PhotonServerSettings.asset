@@ -35,11 +35,10 @@ MonoBehaviour:
   - DestroyRpc
   - DestroySpaceship
   - Fire
+  - OnHit
   - RespawnSpaceship
   - RPC_AlterTerrain
-  - RPC_FireBullet
-  - SetColor
-  - OnHit
+  - RPC_AddCharacter
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
