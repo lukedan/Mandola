@@ -255,6 +255,7 @@ MonoBehaviour:
   Damage: 0
   KillMin: {x: -100, y: -100, z: -100}
   KillMax: {x: 300, y: 100, z: 300}
+  MaxBounces: 5
 --- !u!114 &-4694021020779369204
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -274,6 +275,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents:
   - {fileID: 3033365389153873157}
+  - {fileID: 1117180641118290736}
   viewIdField: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0

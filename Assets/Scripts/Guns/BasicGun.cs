@@ -54,6 +54,10 @@ public class BasicGun : GunBase {
 	/// </summary>
 	public float BulletDamage = 0.1f;
 	/// <summary>
+	/// Maximum number of bullet bounces before a bullet will be destroyed.
+	/// </summary>
+	public int MaxBulletBounces = 5;
+	/// <summary>
 	/// The bullet. It must have a rigid body.
 	/// </summary>
 	public GameObject BulletPrefab;
@@ -154,10 +158,11 @@ public class BasicGun : GunBase {
 					Vector3 direction = (aim - position).normalized;
 					direction = direction * AccuracyDistance + UnityEngine.Random.insideUnitSphere * _inaccuracy;
 					direction = direction.normalized;
+					// TODO maybe use custom data type instead
 					GameObject bullet = PhotonNetwork.Instantiate(
 						"Bullet", position + direction * FireOffset, Quaternion.identity, 0,
 						new object[] {
-							BulletColor.r, BulletColor.g, BulletColor.b, BulletColor.a, BulletColorIntensity
+							BulletColor.r, BulletColor.g, BulletColor.b, BulletColor.a, BulletColorIntensity, MaxBulletBounces
 						}
 					);
 					// TODO if the players are not happy with this non-WYSIWYG velocity, compensate for player velocity

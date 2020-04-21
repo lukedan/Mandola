@@ -31,6 +31,10 @@ public class Bullet : MonoBehaviour, IPunObservable, IPunInstantiateMagicCallbac
 	/// Bullets outside of this box will be destroyed.
 	/// </summary>
 	public Vector3 KillMax = new Vector3(300.0f, 100.0f, 300.0f);
+	/// <summary>
+	/// The maximum number of bounces.
+	/// </summary>
+	public int MaxBounces = 5;
 
 	private Rigidbody _rigidBody;
 	private int _bounces = 0;
@@ -98,7 +102,10 @@ public class Bullet : MonoBehaviour, IPunObservable, IPunInstantiateMagicCallbac
 	private void OnCollisionEnter(Collision collision) {
 		if (_network.IsMine) {
 			++_bounces;
-			// TODO destroy after a certain amount of bounces
+			// destroy after a certain amount of bounces
+			if (_bounces >= MaxBounces) {
+				PhotonNetwork.Destroy(gameObject);
+			}
 		}
 	}
 
@@ -125,5 +132,6 @@ public class Bullet : MonoBehaviour, IPunObservable, IPunInstantiateMagicCallbac
 			),
 			(float)info.photonView.InstantiationData[4]
 		);
+		MaxBounces = (int)info.photonView.InstantiationData[5];
 	}
 }
