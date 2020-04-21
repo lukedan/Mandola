@@ -23,6 +23,14 @@ public class Bullet : MonoBehaviour, IPunObservable, IPunInstantiateMagicCallbac
 	/// The damage of this bullet.
 	/// </summary>
 	public float Damage = 0.0f;
+	/// <summary>
+	/// Bullets outside of this box will be destroyed.
+	/// </summary>
+	public Vector3 KillMin = new Vector3(-100.0f, -100.0f, -100.0f);
+	/// <summary>
+	/// Bullets outside of this box will be destroyed.
+	/// </summary>
+	public Vector3 KillMax = new Vector3(300.0f, 100.0f, 300.0f);
 
 	private Rigidbody _rigidBody;
 	private int _bounces = 0;
@@ -55,6 +63,17 @@ public class Bullet : MonoBehaviour, IPunObservable, IPunInstantiateMagicCallbac
 		if (_network.IsMine) {
 			// raycast for player hits
 			Vector3 pos = transform.position;
+
+			// check for kill zone
+			if (
+				pos.x < KillMin.x || pos.x > KillMax.x ||
+				pos.y < KillMin.y || pos.y > KillMax.y ||
+				pos.z < KillMin.z || pos.z > KillMax.z
+			) { // destroy
+				PhotonNetwork.Destroy(gameObject);
+				return;
+			}
+
 			Collider[] cols = Physics.OverlapCapsule(_prevPosition, pos, _radius, 1 << Utils.PlayerLayer);
 			if (cols.Length > 0) {
 				Collider minCol = null;
