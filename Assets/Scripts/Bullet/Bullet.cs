@@ -87,7 +87,7 @@ public class Bullet : MonoBehaviour, IPunObservable, IPunInstantiateMagicCallbac
 				}
 				if (minCol) {
 					PhotonView view = minCol.GetComponent<PhotonView>();
-					view.RPC("OnHit", view.Owner, Damage);
+					view.RPC("RPC_OnHit", view.Owner, Damage);
 					PhotonNetwork.Destroy(gameObject);
 				}
 			}
