@@ -253,6 +253,8 @@ MonoBehaviour:
   MeshRenderer: {fileID: 405857340734856447}
   VisualTransform: {fileID: 8665401547593633532}
   Damage: 0
+  KillMin: {x: -100, y: -100, z: -100}
+  KillMax: {x: 300, y: 100, z: 300}
 --- !u!114 &-4694021020779369204
 MonoBehaviour:
   m_ObjectHideFlags: 0
