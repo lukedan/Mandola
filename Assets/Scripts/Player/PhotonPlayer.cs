@@ -15,9 +15,6 @@ public class PhotonPlayer : MonoBehaviour {
 			Debug.Log("try to create an avatar");
 			myAvatar = PhotonNetwork.Instantiate(Path.Combine("PlayerPrefabs", "PlayerAvatar"),
 				GameSetup.GS.spawnPoints[spawnPicker].position, GameSetup.GS.spawnPoints[spawnPicker].rotation, 0);
-			if (PV.Owner.IsMasterClient) {
-
-			}
 		}
 	}
 }
