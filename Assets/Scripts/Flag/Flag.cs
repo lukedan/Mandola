@@ -13,12 +13,12 @@ public class Flag : MonoBehaviour {
 
 	private void OnTriggerEnter(Collider other) {
 		if (_network.IsMine) {
-			if (other.gameObject.layer == Utils.FlagLayer) {
+			if (other.gameObject.layer == Utils.PlayerLayer) {
 				PhotonView collidingView = other.GetComponent<PhotonView>();
 				if (!collidingView.Owner.IsLocal) {
 					_network.TransferOwnership(collidingView.Owner);
-					collidingView.RPC("RPC_OnPlayerGotFlag", RpcTarget.All, _network.ViewID);
 				}
+				collidingView.RPC("RPC_OnPlayerGotFlag", RpcTarget.All, _network.ViewID);
 			}
 		}
 	}

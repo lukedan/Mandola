@@ -65,12 +65,14 @@ public class PlayerStats : MonoBehaviour {
 			// TODO
 		}
 	}
+
 	[PunRPC]
 	public void RPC_OnPlayerGotFlag(int flagObjectID) {
 		// attach flag to this player
 		PhotonView flagView = PhotonView.Find(flagObjectID);
 		flagView.transform.parent = transform;
 		flagView.transform.localPosition = new Vector3(0.0f, 3.0f, 0.0f);
+		flagView.GetComponent<Rigidbody>().isKinematic = true;
 		_carryingFlag = flagView.GetComponent<Flag>();
 	}
 }
