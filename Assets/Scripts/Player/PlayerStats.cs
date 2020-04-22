@@ -38,10 +38,12 @@ public class PlayerStats : MonoBehaviour {
 	private ChromaticAberration _damageEffect;
 
 	private PhotonView _network;
-	private Flag _carryingFlag;
 
 	private void Start() {
 		_network = GetComponent<PhotonView>();
+		if (!_network.IsMine) {
+			PostProcessVolume.enabled = false;
+		}
 		PostProcessVolume.profile.TryGetSettings(out _damageEffect);
 	}
 
@@ -58,10 +60,17 @@ public class PlayerStats : MonoBehaviour {
 	/// </summary>
 	[PunRPC]
 	public void RPC_OnHit(float damage) {
+		Debug.Assert(_network.IsMine);
 		Health -= damage;
 		float val = _damageEffect.intensity.value;
 		_damageEffect.intensity.Override(Mathf.Min(val + DamageEffectExaggeration, DamageEffectClamp));
-		if (Health < 0.0f) { // ded
+		if (Health < 0.0f) {
+			// player is dead
+			// drop flag
+			Flag flag = GetComponentInChildren<Flag>();
+			if (flag) {
+				flag.GetComponent<PhotonView>().RPC("RPC_OnPlayerKilled", RpcTarget.All);
+			}
 			// TODO
 		}
 	}
@@ -73,6 +82,5 @@ public class PlayerStats : MonoBehaviour {
 		flagView.transform.parent = transform;
 		flagView.transform.localPosition = new Vector3(0.0f, 3.0f, 0.0f);
 		flagView.GetComponent<Rigidbody>().isKinematic = true;
-		_carryingFlag = flagView.GetComponent<Flag>();
 	}
 }

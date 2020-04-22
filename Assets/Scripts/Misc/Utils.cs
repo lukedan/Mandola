@@ -9,7 +9,8 @@ public static class Utils {
 	public static readonly int
 		TerrainLayer = LayerMask.NameToLayer("Terrain"),
 		PlayerLayer = LayerMask.NameToLayer("Player"),
-		FlagLayer = LayerMask.NameToLayer("Flag");
+		FlagLayer = LayerMask.NameToLayer("Flag"),
+		FlagZoneLayer = LayerMask.NameToLayer("FlagZone");
 
 	/// <summary>
 	/// Alters all prisms in the specified range.

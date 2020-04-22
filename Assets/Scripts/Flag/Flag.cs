@@ -12,7 +12,7 @@ public class Flag : MonoBehaviour {
 	}
 
 	private void OnTriggerEnter(Collider other) {
-		if (_network.IsMine) {
+		if (_network.IsMine && transform.parent == null) {
 			if (other.gameObject.layer == Utils.PlayerLayer) {
 				PhotonView collidingView = other.GetComponent<PhotonView>();
 				if (!collidingView.Owner.IsLocal) {
@@ -21,5 +21,11 @@ public class Flag : MonoBehaviour {
 				collidingView.RPC("RPC_OnPlayerGotFlag", RpcTarget.All, _network.ViewID);
 			}
 		}
+	}
+
+	[PunRPC]
+	public void RPC_OnPlayerKilled() {
+		transform.parent = null;
+		GetComponent<Rigidbody>().isKinematic = false;
 	}
 }

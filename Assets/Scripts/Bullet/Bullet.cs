@@ -116,10 +116,12 @@ public class Bullet : MonoBehaviour, IPunObservable, IPunInstantiateMagicCallbac
 	}
 
 	void IPunObservable.OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {
-		if (stream.IsWriting) {
-			stream.SendNext(_rigidBody.velocity);
-		} else {
-			_rigidBody.velocity = (Vector3)stream.ReceiveNext();
+		if (_rigidBody) {
+			if (stream.IsWriting) {
+				stream.SendNext(_rigidBody.velocity);
+			} else {
+				_rigidBody.velocity = (Vector3)stream.ReceiveNext();
+			}
 		}
 	}
 	void IPunInstantiateMagicCallback.OnPhotonInstantiate(PhotonMessageInfo info) {
