@@ -11,8 +11,8 @@ public class PhotonRoom : MonoBehaviourPunCallbacks, IInRoomCallbacks {
 	public static PhotonRoom room;
 	private PhotonView PV;
 
-	public int multiplayScene;
-	public int currentScene;
+	public List<string> GamemodeSceneNames = new List<string>();
+	public string SelectedGamemodeSceneName;
 
 	private void Awake() {
 		// Set up singleton
@@ -52,12 +52,11 @@ public class PhotonRoom : MonoBehaviourPunCallbacks, IInRoomCallbacks {
 		if (!PhotonNetwork.IsMasterClient) {
 			return;
 		}
-		PhotonNetwork.LoadLevel(multiplayScene);
+		PhotonNetwork.LoadLevel(SelectedGamemodeSceneName);
 	}
 
 	private void OnSceneFinishedLoading(Scene scene, LoadSceneMode mode) {
-		currentScene = scene.buildIndex;
-		if (currentScene == multiplayScene) {
+		if (GamemodeSceneNames.Contains(scene.name)) {
 			CreatePlayer();
 		}
 	}

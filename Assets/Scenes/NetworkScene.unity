@@ -1236,8 +1236,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6346cb3bb5710244abd360cba865e8c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  multiplayScene: 2
-  currentScene: 0
+  GamemodeSceneNames:
+  - CaptureTheFlag
+  SelectedGamemodeSceneName: CaptureTheFlag
 --- !u!4 &1439764445
 Transform:
   m_ObjectHideFlags: 0
