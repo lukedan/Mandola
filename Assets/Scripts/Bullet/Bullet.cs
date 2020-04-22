@@ -35,78 +35,73 @@ public class Bullet : MonoBehaviour, IPunObservable, IPunInstantiateMagicCallbac
 	/// The maximum number of bounces.
 	/// </summary>
 	public int MaxBounces = 5;
+	/// <summary>
+	/// The radius of this bullet.
+	/// </summary>
+	public float Radius = 0.1f;
+	/// <summary>
+	/// The velocity of this bullet.
+	/// </summary>
+	public Vector3 Velocity;
 
-	private Rigidbody _rigidBody;
 	private int _bounces = 0;
-	private Vector3 _prevPosition;
-	private float _radius = 0.0f;
 
 	private PhotonView _network;
 
 	void Start() {
 		_network = GetComponent<PhotonView>();
 
-		_rigidBody = GetComponent<Rigidbody>();
-
-		_prevPosition = transform.position;
-		_radius = GetComponent<SphereCollider>().radius;
-
 		_updateOrientation();
 	}
 
 	private void _updateOrientation() {
-		VisualTransform.rotation = Quaternion.FromToRotation(new Vector3(0.0f, 1.0f, 0.0f), _rigidBody.velocity);
+		VisualTransform.rotation = Quaternion.FromToRotation(new Vector3(0.0f, 1.0f, 0.0f), Velocity);
+	}
+	private void _hitPlayer(Component player) {
+		PhotonView view = player.GetComponent<PhotonView>();
+		view.RPC("RPC_OnHit", view.Owner, Damage);
+		PhotonNetwork.Destroy(gameObject);
 	}
 
 	private void Update() {
-		// update VisualTransform
-		_updateOrientation();
-	}
-
-	private void FixedUpdate() {
 		if (_network.IsMine) {
-			// raycast for player hits
-			Vector3 pos = transform.position;
+			Vector3 prevPosition = transform.position;
 
-			// check for kill zone
-			if (
-				pos.x < KillMin.x || pos.x > KillMax.x ||
-				pos.y < KillMin.y || pos.y > KillMax.y ||
-				pos.z < KillMin.z || pos.z > KillMax.z
-			) { // destroy
-				PhotonNetwork.Destroy(gameObject);
+			// first test if this bullet is inside any player since SphereCast does not report such intersections
+			Collider[] overlapPlayers = Physics.OverlapSphere(transform.position, Radius, 1 << Utils.PlayerLayer);
+			if (overlapPlayers.Length > 0) {
+				_hitPlayer(overlapPlayers[0]);
 				return;
 			}
 
-			Collider[] cols = Physics.OverlapCapsule(_prevPosition, pos, _radius, 1 << Utils.PlayerLayer);
-			if (cols.Length > 0) {
-				Collider minCol = null;
-				float minDist = float.MaxValue;
-				foreach (Collider c in cols) {
-					float dist = (c.transform.position - _prevPosition).sqrMagnitude;
-					if (dist < minDist) {
-						minDist = dist;
-						minCol = c;
-					}
+			// raycast for physics
+			Vector3 dir = Velocity;
+			float speed = dir.magnitude;
+			dir /= speed;
+			if (Physics.SphereCast(
+				transform.position, Radius, dir, out RaycastHit hit, speed * Time.deltaTime,
+				(1 << Utils.TerrainLayer) | (1 << Utils.PlayerLayer)
+			)) {
+				if (hit.collider.gameObject.layer == Utils.PlayerLayer) { // hits a player
+					_hitPlayer(hit.collider);
+					return;
 				}
-				if (minCol) {
-					PhotonView view = minCol.GetComponent<PhotonView>();
-					view.RPC("RPC_OnHit", view.Owner, Damage);
+				// otherwise hits a wall
+				Velocity -= hit.normal * (2.0f * Vector3.Dot(hit.normal, Velocity) / hit.normal.sqrMagnitude);
+				transform.position += hit.distance * dir;
+				++_bounces;
+				// destroy after a certain amount of bounces
+				if (_bounces >= MaxBounces) {
 					PhotonNetwork.Destroy(gameObject);
+					return;
 				}
+			} else {
+				transform.position += Velocity * Time.deltaTime;
 			}
-			_prevPosition = pos;
 		}
-	}
 
-	private void OnCollisionEnter(Collision collision) {
-		if (_network.IsMine) {
-			++_bounces;
-			// destroy after a certain amount of bounces
-			if (_bounces >= MaxBounces) {
-				PhotonNetwork.Destroy(gameObject);
-			}
-		}
+		// update VisualTransform
+		_updateOrientation();
 	}
 
 	public void SetColor(Color color, float intensity) {
@@ -116,13 +111,7 @@ public class Bullet : MonoBehaviour, IPunObservable, IPunInstantiateMagicCallbac
 	}
 
 	void IPunObservable.OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {
-		if (_rigidBody) {
-			if (stream.IsWriting) {
-				stream.SendNext(_rigidBody.velocity);
-			} else {
-				_rigidBody.velocity = (Vector3)stream.ReceiveNext();
-			}
-		}
+		stream.Serialize(ref Velocity);
 	}
 	void IPunInstantiateMagicCallback.OnPhotonInstantiate(PhotonMessageInfo info) {
 		SetColor(

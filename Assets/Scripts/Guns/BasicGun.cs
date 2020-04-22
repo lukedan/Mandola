@@ -86,7 +86,10 @@ public class BasicGun : GunBase {
 	private bool _freshTrigger = true;
 
 	private CharacterController _parentVelocity;
-	private LineRenderer _aim;
+	/// <summary>
+	/// The aim indicator.
+	/// </summary>
+	public LineRenderer AimIndicator;
 
 	private PhotonView _network;
 
@@ -99,7 +102,6 @@ public class BasicGun : GunBase {
 			return;
 		}
 		_parentVelocity = parent.GetComponent<CharacterController>();
-		_aim = GetComponent<LineRenderer>();
 
 		_instantReload();
 	}
@@ -126,15 +128,15 @@ public class BasicGun : GunBase {
 	}
 	public override void UpdateGun(Vector3 aim, float deltaTime) {
 		Vector3 position = transform.position;
-		if (_aim) {
+		if (AimIndicator) {
 			Vector3 diff = aim - position;
 			float length = diff.magnitude;
 			diff /= length;
 			length = Mathf.Min(2.0f, 0.5f * length);
-			_aim.SetPosition(0, position);
-			_aim.SetPosition(1, position + length * diff);
-			_aim.SetPosition(2, aim - length * diff);
-			_aim.SetPosition(3, aim);
+			AimIndicator.SetPosition(0, position);
+			AimIndicator.SetPosition(1, position + length * diff);
+			AimIndicator.SetPosition(2, aim - length * diff);
+			AimIndicator.SetPosition(3, aim);
 		}
 
 		if (IsReloading) {
@@ -166,8 +168,9 @@ public class BasicGun : GunBase {
 						}
 					);
 					// TODO if the players are not happy with this non-WYSIWYG velocity, compensate for player velocity
-					bullet.GetComponent<Rigidbody>().velocity = direction * BulletSpeed + _parentVelocity.velocity;
-					bullet.GetComponent<Bullet>().Damage = BulletDamage;
+					Bullet bulletComp = bullet.GetComponent<Bullet>();
+					bulletComp.Velocity = direction * BulletSpeed + _parentVelocity.velocity;
+					bulletComp.Damage = BulletDamage;
 
 					_inaccuracy = Mathf.Min(MaximumInaccuracy, _inaccuracy + ShootInaccuracy);
 					--_numClipBullets;

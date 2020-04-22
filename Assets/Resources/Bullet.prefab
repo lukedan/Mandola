@@ -180,8 +180,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 746394421382398527}
-  - component: {fileID: 4102554362305133788}
-  - component: {fileID: 2662763060645884269}
   - component: {fileID: 1117180641118290736}
   - component: {fileID: -4694021020779369204}
   - component: {fileID: 3033365389153873157}
@@ -208,35 +206,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!54 &4102554362305133788
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8013300514214558543}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 112
-  m_CollisionDetection: 2
---- !u!135 &2662763060645884269
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8013300514214558543}
-  m_Material: {fileID: 13400000, guid: d1e166c6712b1954cb31a61513fd05ca, type: 2}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &1117180641118290736
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -256,6 +225,8 @@ MonoBehaviour:
   KillMin: {x: -100, y: -100, z: -100}
   KillMax: {x: 300, y: 100, z: 300}
   MaxBounces: 5
+  Radius: 0.1
+  Velocity: {x: 0, y: 0, z: 0}
 --- !u!114 &-4694021020779369204
 MonoBehaviour:
   m_ObjectHideFlags: 0
