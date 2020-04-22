@@ -17,15 +17,16 @@ public class DebugAlterTerrainInRange : MonoBehaviour {
 				float.PositiveInfinity, 1 << Utils.TerrainLayer
 			);
 			if (hit.collider != null) {
-				bool change = Input.GetKey(KeyCode.LeftControl);
-				//Utils.AlterTerrainInCylinder(new Vector2(hit.point.x, hit.point.z), 5.0f, change ? -1 : 1);
-				_network.RPC("RPC_AlterTerrain", RpcTarget.AllBuffered, new Vector2(hit.point.x, hit.point.z), 5.0f, change);
+				_network.RPC(
+					"RPC_AlterTerrain", RpcTarget.AllBufferedViaServer,
+					new Vector2(hit.point.x, hit.point.z), 5.0f, Input.GetAxisRaw("Ability")
+				);
 			}
 		}
 	}
 
 	[PunRPC]
-	void RPC_AlterTerrain(Vector2 v, float y, bool change) {
-		Utils.AlterTerrainInCylinder(v, y, change ? -1 : 1);
+	void RPC_AlterTerrain(Vector2 v, float radius, float delta) {
+		Utils.AlterTerrainInCylinder(v, radius, delta);
 	}
 }

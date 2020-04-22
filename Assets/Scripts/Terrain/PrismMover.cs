@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -22,28 +22,26 @@ public class PrismMover : MonoBehaviour {
 	}
 
 	/// <summary>
-	/// The height of a level.
-	/// </summary>
-	public float LevelGap = 1.0f;
-	/// <summary>
 	/// The speed at which this prism moves.
 	/// </summary>
 	public float MovingSpeed = 1.0f;
 	/// <summary>
-	/// The level this prism's at.
+	/// Maximum height.
 	/// </summary>
-	private int _targetLevel = 0;
+	public float MaxHeight = 4.0f;
+	/// <summary>
+	/// Minimum height.
+	/// </summary>
+	public float MinHeight = -4.0f;
+	/// <summary>
+	/// The target height of this prism.
+	/// </summary>
+	private float _targetHeight = 0.0f;
 	/// <summary>
 	/// Whether or not this prism is currently moving.
 	/// </summary>
 	private LevelChange _changingLevel = LevelChange.NotChanging;
 
-	/// <summary>
-	/// Returns the target vertical position of this prism.
-	/// </summary>
-	public float TargetLevelPosition {
-		get => LevelGap * _targetLevel;
-	}
 	/// <summary>
 	/// Target vertical velocity of this prism.
 	/// </summary>
@@ -60,16 +58,16 @@ public class PrismMover : MonoBehaviour {
 		}
 	}
 
-	private void FixedUpdate() {
+	private void Update() {
 		if (_changingLevel != LevelChange.NotChanging) {
 			Vector3 pos = transform.localPosition;
-			pos.y += TargetVerticalVelocity * Time.fixedDeltaTime;
+			pos.y += TargetVerticalVelocity * Time.deltaTime;
 			bool
-				aboveTarget = pos.y > TargetLevelPosition,
+				aboveTarget = pos.y > _targetHeight,
 				movingUp = _changingLevel == LevelChange.Upwards;
 			if (aboveTarget == movingUp) { // stop
 				// snap to position
-				pos.y = TargetLevelPosition;
+				pos.y = _targetHeight;
 				_changingLevel = LevelChange.NotChanging;
 			}
 			transform.localPosition = pos;
@@ -80,11 +78,9 @@ public class PrismMover : MonoBehaviour {
 	/// Changes the level of this prism.
 	/// </summary>
 	/// <param name="levelDelta">The amount of levels to change. This is added to <see cref="_targetLevel"/>.</param>
-	public void ChangeLevel(int levelDelta) {
-		if (levelDelta != 0) {
-			_targetLevel += levelDelta;
-			_changingLevel =
-				transform.localPosition.y > TargetLevelPosition ? LevelChange.Downwards : LevelChange.Upwards;
-		}
+	public void ChangeHeight(float delta) {
+		_targetHeight = Mathf.Clamp(_targetHeight + delta, MinHeight, MaxHeight);
+		_changingLevel =
+			transform.localPosition.y > _targetHeight ? LevelChange.Downwards : LevelChange.Upwards;
 	}
 }

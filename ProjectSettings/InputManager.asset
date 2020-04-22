@@ -57,7 +57,7 @@ InputManager:
     m_Name: Ability
     descriptiveName: 
     descriptiveNegativeName: 
-    negativeButton: 
+    negativeButton: f
     positiveButton: e
     altNegativeButton: 
     altPositiveButton: mouse 2
