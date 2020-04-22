@@ -10,8 +10,7 @@ public class NetworkedDestroyAfterTime : MonoBehaviour {
 	public float Countdown = 1.0f;
 
 	private void Start() {
-		PhotonView view = GetComponent<PhotonView>();
-		if (!view || !view.IsMine) {
+		if (!GetComponent<PhotonView>().IsMine) {
 			enabled = false;
 		}
 	}

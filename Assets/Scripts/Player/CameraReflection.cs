@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Photon.Pun;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,6 +12,13 @@ public class CameraReflection : MonoBehaviour {
 	/// The probe's transform.
 	/// </summary>
 	public Transform ProbeTransform;
+
+	private void Start() {
+		if (!transform.parent.GetComponent<PhotonView>().IsMine) {
+			enabled = false;
+			ProbeTransform.GetComponent<ReflectionProbe>().enabled = false;
+		}
+	}
 
 	private void Update() {
 		Vector3 myPos = transform.position;
