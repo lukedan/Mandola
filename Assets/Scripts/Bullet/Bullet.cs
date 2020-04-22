@@ -1,6 +1,7 @@
 ﻿using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Experimental.GlobalIllumination;
@@ -57,20 +58,35 @@ public class Bullet : MonoBehaviour, IPunObservable, IPunInstantiateMagicCallbac
 	private void _updateOrientation() {
 		VisualTransform.rotation = Quaternion.FromToRotation(new Vector3(0.0f, 1.0f, 0.0f), Velocity);
 	}
-	private void _hitPlayer(Component player) {
+	private void _emitSparkles(Vector3 pos, Vector3 normal, Vector3 particleVel) {
+		PhotonNetwork.Instantiate(
+			Path.Combine("Effects", "HitParticles"), pos + 0.1f * normal, Quaternion.FromToRotation(Vector3.forward, particleVel)
+		);
+	}
+	private void _hitPlayer(Component player, Vector3 pos, Vector3 normal, Vector3 particleVel) {
 		PhotonView view = player.GetComponent<PhotonView>();
 		view.RPC("RPC_OnHit", view.Owner, Damage);
+		_emitSparkles(pos, normal, particleVel);
 		PhotonNetwork.Destroy(gameObject);
 	}
 
 	private void Update() {
 		if (_network.IsMine) {
-			Vector3 prevPosition = transform.position;
+			// check for kill zone
+			Vector3 pos = transform.position;
+			if (
+				pos.x < KillMin.x || pos.x > KillMax.x ||
+				pos.y < KillMin.y || pos.y > KillMax.y ||
+				pos.z < KillMin.z || pos.z > KillMax.z
+			) { // destroy
+				PhotonNetwork.Destroy(gameObject);
+				return;
+			}
 
 			// first test if this bullet is inside any player since SphereCast does not report such intersections
 			Collider[] overlapPlayers = Physics.OverlapSphere(transform.position, Radius, 1 << Utils.PlayerLayer);
 			if (overlapPlayers.Length > 0) {
-				_hitPlayer(overlapPlayers[0]);
+				_hitPlayer(overlapPlayers[0], transform.position, -Velocity.normalized, -Velocity);
 				return;
 			}
 
@@ -83,7 +99,7 @@ public class Bullet : MonoBehaviour, IPunObservable, IPunInstantiateMagicCallbac
 				(1 << Utils.TerrainLayer) | (1 << Utils.PlayerLayer)
 			)) {
 				if (hit.collider.gameObject.layer == Utils.PlayerLayer) { // hits a player
-					_hitPlayer(hit.collider);
+					_hitPlayer(hit.collider, hit.point, hit.normal, hit.normal);
 					return;
 				}
 				// otherwise hits a wall
@@ -92,6 +108,7 @@ public class Bullet : MonoBehaviour, IPunObservable, IPunInstantiateMagicCallbac
 				++_bounces;
 				// destroy after a certain amount of bounces
 				if (_bounces >= MaxBounces) {
+					_emitSparkles(hit.point, hit.normal, Velocity);
 					PhotonNetwork.Destroy(gameObject);
 					return;
 				}
