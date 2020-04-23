@@ -41,6 +41,7 @@ MonoBehaviour:
   - RPC_OnHit
   - RPC_OnPlayerGotFlag
   - RPC_OnPlayerKilled
+  - RPC_OnFlagCaptured
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

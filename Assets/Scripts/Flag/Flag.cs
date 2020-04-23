@@ -28,4 +28,8 @@ public class Flag : MonoBehaviour {
 		transform.parent = null;
 		GetComponent<Rigidbody>().isKinematic = false;
 	}
+	[PunRPC]
+	public void RPC_OnFlagCaptured(int team) {
+		Teams.LevelTeams.OnScore(team);
+	}
 }

@@ -31,6 +31,11 @@ public class PlayerStats : MonoBehaviour {
 	public float DamageEffectClamp = 3.0f;
 
 	/// <summary>
+	/// The team this player belongs to.
+	/// </summary>
+	public int Team = 0;
+
+	/// <summary>
 	/// The post processing volume.
 	/// </summary>
 	public PostProcessVolume PostProcessVolume;

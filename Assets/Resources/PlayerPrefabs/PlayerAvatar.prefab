@@ -289,6 +289,7 @@ MonoBehaviour:
   DamageEffectRecovery: 2
   DamageEffectAtMinimumHealth: 1
   DamageEffectClamp: 3
+  Team: 0
   PostProcessVolume: {fileID: 958283231777426243}
 --- !u!114 &-693497772279120710
 MonoBehaviour:
