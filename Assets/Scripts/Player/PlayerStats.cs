@@ -35,21 +35,13 @@ public class PlayerStats : MonoBehaviour {
 	/// </summary>
 	public int Team = 0;
 
-	/// <summary>
-	/// The post processing volume.
-	/// </summary>
-	public PostProcessVolume PostProcessVolume;
-
 	private ChromaticAberration _damageEffect;
 
 	private PhotonView _network;
 
 	private void Start() {
 		_network = GetComponent<PhotonView>();
-		if (!_network.IsMine) {
-			PostProcessVolume.enabled = false;
-		}
-		PostProcessVolume.profile.TryGetSettings(out _damageEffect);
+		GlobalPostProcessingVolume.GlobalVolume.profile.TryGetSettings(out _damageEffect);
 	}
 
 	private void Update() {
