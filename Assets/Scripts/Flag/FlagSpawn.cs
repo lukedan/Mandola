@@ -16,7 +16,7 @@ public class FlagSpawn : MonoBehaviour {
 		if (_network.IsMine) {
 			if (_spawn == null) {
 				_spawn = PhotonNetwork.Instantiate(
-					Path.Combine("Flag", "Flag"), transform.position, transform.rotation
+					Path.Combine("CaptureTheFlag", "Flag"), transform.position, transform.rotation
 				).GetComponent<Flag>();
 			}
 		}

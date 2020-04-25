@@ -9,19 +9,20 @@ public class FlagZone : MonoBehaviour {
 	/// </summary>
 	public int Team = 0;
 
+	private PhotonView _sceneNetwork;
+
 	private void Start() {
-		if (Teams.LevelTeams) {
-			var colors = Teams.LevelTeams.Colors;
-			if (Team < colors.Count) {
-				GetComponent<MeshRenderer>().material.color = colors[Team];
-			}
+		_sceneNetwork = InGameCommon.CurrentGame.GetComponent<PhotonView>();
+		Teams level = InGameCommon.CurrentGame.GetComponent<Teams>();
+		List<Color> colors = level.Colors;
+		if (Team < colors.Count) {
+			GetComponent<MeshRenderer>().material.color = colors[Team];
 		}
 	}
 
 	private void OnTriggerEnter(Collider other) {
 		if (other.gameObject.layer == Utils.FlagLayer) {
-			PhotonView view = other.GetComponent<PhotonView>();
-			view.RPC("RPC_OnFlagCaptured", RpcTarget.AllBufferedViaServer, Team);
+			_sceneNetwork.RPC("RPC_OnScore", RpcTarget.AllBufferedViaServer, Team, 1);
 			PhotonNetwork.Destroy(other.gameObject);
 		}
 	}

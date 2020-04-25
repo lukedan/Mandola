@@ -21,6 +21,10 @@ public class RoomItemDisplay : MonoBehaviour {
 	public Text NumPlayersText;
 
 	private void Start() {
+		Refresh();
+	}
+
+	public void Refresh() {
 		NameText.text = Name;
 		NumPlayersText.text = string.Format("{0} / {1}", NumPlayers, MaxNumPlayers);
 	}

@@ -16,13 +16,26 @@ public class PhotonLobby : MonoBehaviourPunCallbacks {
 	public GameObject RoomListPanel;
 	public GameObject RoomItemPrefab;
 
+	private struct RoomDisplayInfo {
+		public RoomInfo Info;
+		public RoomItemDisplay Display;
+	}
+
+	private Dictionary<string, RoomDisplayInfo> _cachedRooms = new Dictionary<string, RoomDisplayInfo>();
+
 	private void Awake() {
 		lobby = this;  // Create the singleton, lives withing the main menu scene
 	}
 
 	// Start is called before the first frame update
 	void Start() {
-		PhotonNetwork.ConnectUsingSettings();  // Connects to Master photon server.
+		if (!PhotonNetwork.IsConnected) {
+			PhotonNetwork.ConnectUsingSettings();  // Connects to Master photon server.
+		} else if (!PhotonNetwork.InLobby) {
+			PhotonNetwork.JoinLobby();
+		} else {
+			_LobbyJoined();
+		}
 	}
 
 	public override void OnConnectedToMaster() {
@@ -32,56 +45,90 @@ public class PhotonLobby : MonoBehaviourPunCallbacks {
 	}
 	public override void OnJoinedLobby() {
 		base.OnJoinedLobby();
-		ConnectingIndicator.SetActive(false);
-		RoomOperationArea.SetActive(true); // Player is now connected to the servers, enables the battlebutton to allow join a game.
+		_LobbyJoined();
 	}
 	public override void OnCreateRoomFailed(short returnCode, string message) {
 		Debug.Log("Try to create a new room but failed. There must be alread a room with the same name");
-		CreateRoomWithRandomName();
+		_CreateRoomWithRandomName();
 	}
 	public override void OnJoinRandomFailed(short returnCode, string message) {
 		Debug.Log("Try to join a game but failed. There must be no open game available");
-		CreateRoomWithRandomName();
+		_CreateRoomWithRandomName();
 	}
 	public override void OnRoomListUpdate(List<RoomInfo> roomList) {
 		base.OnRoomListUpdate(roomList);
-		foreach (Transform t in RoomListPanel.transform) {
-			Destroy(t.gameObject);
-		}
 		foreach (RoomInfo room in roomList) {
-			if (room.IsVisible) {
-				GameObject item = Instantiate(RoomItemPrefab);
-				RoomItemDisplay display = item.GetComponent<RoomItemDisplay>();
-				display.Name = room.Name;
-				display.NumPlayers = room.PlayerCount;
-				display.MaxNumPlayers = room.MaxPlayers;
-				display.transform.parent = RoomListPanel.transform;
-				item.GetComponent<Button>().onClick.AddListener(() => {
-					PhotonNetwork.JoinRoom(room.Name);
-				});
+			if (room.RemovedFromList) {
+				if (_cachedRooms.TryGetValue(room.Name, out RoomDisplayInfo info)) {
+					if (info.Display) {
+						Destroy(info.Display.gameObject);
+					}
+				}
+				_cachedRooms.Remove(room.Name);
+			} else {
+				RoomDisplayInfo info;
+				if (!_cachedRooms.TryGetValue(room.Name, out info)) {
+					info = new RoomDisplayInfo();
+				}
+				info.Info = room;
+
+				if (room.IsVisible) {
+					bool manualRefresh = true;
+					if (!info.Display) {
+						GameObject item = Instantiate(RoomItemPrefab);
+						item.transform.parent = RoomListPanel.transform;
+						item.GetComponent<Button>().onClick.AddListener(() => {
+							_OnStartedJoiningRoom();
+							PhotonNetwork.JoinRoom(room.Name);
+						});
+						info.Display = item.GetComponent<RoomItemDisplay>();
+						manualRefresh = false;
+					}
+					info.Display.Name = room.Name;
+					info.Display.NumPlayers = room.PlayerCount;
+					info.Display.MaxNumPlayers = room.MaxPlayers;
+					if (manualRefresh) {
+						info.Display.Refresh();
+					}
+				} else {
+					if (info.Display) {
+						Destroy(info.Display.gameObject);
+						info.Display = null;
+					}
+				}
+
+				_cachedRooms[room.Name] = info;
 			}
 		}
 	}
 
-	private void CreateRoom(string name) {
+	private	void _OnStartedJoiningRoom() {
+		RoomOperationArea.SetActive(false);
+		cancelButton.SetActive(true);
+	}
+	private void _CreateRoom(string name) {
 		Debug.Log("trying to create room " + name);
+		_OnStartedJoiningRoom();
 		RoomOptions roomOps = new RoomOptions() { IsVisible = true, IsOpen = true, MaxPlayers = 6 };
 		PhotonNetwork.CreateRoom(name, roomOps);
 	}
-	private void CreateRoomWithRandomName() {
-		CreateRoom("Room " + Random.Range(0, 10000).ToString());
+	private void _CreateRoomWithRandomName() {
+		_CreateRoom("Room " + Random.Range(0, 10000).ToString());
+	}
+	private	void _LobbyJoined() {
+		ConnectingIndicator.SetActive(false);
+		RoomOperationArea.SetActive(true);
 	}
 
 	public void OnCreateRoomButtonClicked() {
 		if (RoomNameInput.text.Length > 0) {
-			CreateRoom(RoomNameInput.text);
+			_CreateRoom(RoomNameInput.text);
 		} else {
-			CreateRoomWithRandomName();
+			_CreateRoomWithRandomName();
 		}
 	}
 	public void OnJoinRandomRoomButtonClicked() {
-		RoomOperationArea.SetActive(false);
-		cancelButton.SetActive(true);
+		_OnStartedJoiningRoom();
 		PhotonNetwork.JoinRandomRoom();
 	}
 	public void OnCancelButtonClicked() {
