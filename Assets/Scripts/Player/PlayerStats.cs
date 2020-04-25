@@ -77,6 +77,14 @@ public class PlayerStats : MonoBehaviour {
 				flag.GetComponent<PhotonView>().RPC("RPC_OnPlayerKilled", RpcTarget.All);
 			}
 			// TODO
+
+			//Detach camera from avatar
+			//This should be placed before destroy the avatar
+			Camera avatarCamera = gameObject.transform.GetChild(1).gameObject.GetComponent<Camera>();
+			avatarCamera.GetComponent<PlayerCamera>().DetachCameraFromAvatar();
+
+			//Destroy the avatar
+			PhotonView.Destroy(gameObject);
 		}
 	}
 
