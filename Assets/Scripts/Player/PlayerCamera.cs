@@ -4,10 +4,6 @@ using UnityEngine;
 
 public class PlayerCamera : MonoBehaviour
 {
-
-    //Avatar's transform 
-    private Transform avatarTransform;
-
     //Resolution of game view
     private Vector2 screenResolution;
 
@@ -17,34 +13,40 @@ public class PlayerCamera : MonoBehaviour
     private float offsetScaleZ;
 
     //Initial offset between camera and avatar
-    private Vector3 initialOffset;
+    private Vector3 currentOffset;
 
     //When avatar dies, equals false
     private bool onAvatar;
 
     void Start()
     {
-        avatarTransform = transform.parent.transform;
-        initialOffset = transform.position - avatarTransform.position;
         screenResolution = new Vector2(1024, 768);
         offsetValue = new Vector3(13, 0, 10);
         onAvatar = true;
-
+        currentOffset = new Vector3(0, 0, 0);
     }
 
     // Update is called once per frame
     void Update()
     {
+        CameraShift();
+    }
+
+
+    //Camera shifts according to the mouse position
+    private void CameraShift()
+    {
         if (onAvatar)
         {
-            Vector2 mousePos = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
             offsetScaleX = ((Input.mousePosition.x - screenResolution.x * 0.5f) / (screenResolution.x * 0.5f));
             offsetScaleZ = ((Input.mousePosition.y - screenResolution.y * 0.5f) / (screenResolution.y * 0.5f));
 
+            Vector3 targetOffset = new Vector3(offsetScaleX * offsetValue.x, 0, offsetScaleZ * offsetValue.z);
 
-            transform.position = new Vector3(avatarTransform.position.x + offsetScaleX * offsetValue.x,
-                                             avatarTransform.position.y,
-                                             avatarTransform.position.z + offsetScaleZ * offsetValue.z) + initialOffset;
+            Vector3 velocity = (targetOffset - currentOffset) * 0.5f;
+
+            transform.position += velocity * Time.deltaTime;
+            currentOffset += velocity * Time.deltaTime;
         }
     }
 
