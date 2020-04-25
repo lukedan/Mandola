@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.MemoryProfiler;
 using UnityEngine;
 
 public class BasicGun : GunBase {
@@ -85,7 +86,7 @@ public class BasicGun : GunBase {
 	private float _fireCooldown = 0.0f;
 	private bool _freshTrigger = true;
 
-	private CharacterController _parentVelocity;
+	protected CharacterController _parentVelocity;
 	/// <summary>
 	/// The aim indicator.
 	/// </summary>
@@ -118,6 +119,34 @@ public class BasicGun : GunBase {
 
 	public bool IsReloading => _reloadCooldown > 0.0f;
 	public bool CanFire => _numClipBullets > 0 && _fireCooldown <= 0.0f && !(SemiAuto && !_freshTrigger);
+
+	/// <summary>
+	/// Creates a bullet.
+	/// </summary>
+	/// <returns>The <see cref="Bullet"/> component.</returns>
+	protected Bullet _CreateBullet(Vector3 position) {
+		// TODO maybe use custom data type instead
+		GameObject bullet = PhotonNetwork.Instantiate(
+			"Bullet", position, Quaternion.identity, 0,
+			new object[] {
+				BulletColor.r, BulletColor.g, BulletColor.b, BulletColor.a, BulletColorIntensity, MaxBulletBounces
+			}
+		);
+		return bullet.GetComponent<Bullet>();
+	}
+	/// <summary>
+	/// Fires the gun once.
+	/// </summary>
+	protected virtual void _Fire(Vector3 aim) {
+		Vector3 position = transform.position;
+		Vector3 direction = (aim - position).normalized;
+		direction = direction * AccuracyDistance + UnityEngine.Random.insideUnitSphere * _inaccuracy;
+		direction = direction.normalized;
+		Bullet bullet = _CreateBullet(position + direction * FireOffset);
+		// TODO if the players are not happy with this non-WYSIWYG velocity, compensate for player velocity
+		bullet.Velocity = direction * BulletSpeed + _parentVelocity.velocity;
+		bullet.Damage = BulletDamage;
+	}
 
 	public override void Reload() {
 		// cannot reload while reloading
@@ -155,23 +184,7 @@ public class BasicGun : GunBase {
 				while (CanFire) {
 					_fireCooldown += FiringDelay;
 					_freshTrigger = false;
-
-					// fire bullet
-					Vector3 direction = (aim - position).normalized;
-					direction = direction * AccuracyDistance + UnityEngine.Random.insideUnitSphere * _inaccuracy;
-					direction = direction.normalized;
-					// TODO maybe use custom data type instead
-					GameObject bullet = PhotonNetwork.Instantiate(
-						"Bullet", position + direction * FireOffset, Quaternion.identity, 0,
-						new object[] {
-							BulletColor.r, BulletColor.g, BulletColor.b, BulletColor.a, BulletColorIntensity, MaxBulletBounces
-						}
-					);
-					// TODO if the players are not happy with this non-WYSIWYG velocity, compensate for player velocity
-					Bullet bulletComp = bullet.GetComponent<Bullet>();
-					bulletComp.Velocity = direction * BulletSpeed + _parentVelocity.velocity;
-					bulletComp.Damage = BulletDamage;
-
+					_Fire(aim); // fire bullet
 					_inaccuracy = Mathf.Min(MaximumInaccuracy, _inaccuracy + ShootInaccuracy);
 					--_numClipBullets;
 				}
