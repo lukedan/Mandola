@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 
-public class PlayerStats : MonoBehaviour {
+public class PlayerGeneralInfo : MonoBehaviour, IPunInstantiateMagicCallback {
 	/// <summary>
 	/// Player health.
 	/// </summary>
@@ -41,7 +41,7 @@ public class PlayerStats : MonoBehaviour {
 
 	private void Start() {
 		_network = GetComponent<PhotonView>();
-		GlobalPostProcessingVolume.GlobalVolume.profile.TryGetSettings(out _damageEffect);
+		InGameCommon.CurrentGame.GlobalPostProcessing.profile.TryGetSettings(out _damageEffect);
 	}
 
 	private void Update() {
@@ -50,6 +50,12 @@ public class PlayerStats : MonoBehaviour {
 		_damageEffect.intensity.Override(Mathf.Max(
 			effectTarget, _damageEffect.intensity.value - Time.deltaTime * DamageEffectRecovery
 		));
+	}
+
+	void IPunInstantiateMagicCallback.OnPhotonInstantiate(PhotonMessageInfo info) {
+		Team = (int)info.photonView.InstantiationData[0];
+		int characterID = (int)info.photonView.InstantiationData[1];
+		Instantiate(PlayerInfo.PI.allCharacters[characterID], transform.position, transform.rotation, transform);
 	}
 
 	/// <summary>

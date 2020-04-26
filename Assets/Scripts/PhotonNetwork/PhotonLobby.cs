@@ -16,6 +16,8 @@ public class PhotonLobby : MonoBehaviourPunCallbacks {
 	public GameObject RoomListPanel;
 	public GameObject RoomItemPrefab;
 
+	public string SelectedGameModeSceneName; // TODO this should be a room attribute about which map is being played
+
 	private struct RoomDisplayInfo {
 		public RoomInfo Info;
 		public RoomItemDisplay Display;
@@ -52,6 +54,10 @@ public class PhotonLobby : MonoBehaviourPunCallbacks {
 	public override void OnJoinedLobby() {
 		base.OnJoinedLobby();
 		_LobbyJoined();
+	}
+	public override void OnJoinedRoom() {
+		base.OnJoinedRoom();
+		PhotonNetwork.LoadLevel(SelectedGameModeSceneName);
 	}
 	public override void OnCreateRoomFailed(short returnCode, string message) {
 		Debug.Log("Try to create a new room but failed. There must be alread a room with the same name");
