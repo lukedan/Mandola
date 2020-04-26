@@ -27,8 +27,7 @@ public class PhotonLobby : MonoBehaviourPunCallbacks {
 		lobby = this;  // Create the singleton, lives withing the main menu scene
 	}
 
-	// Start is called before the first frame update
-	void Start() {
+	private void Start() {
 		if (!PhotonNetwork.IsConnected) {
 			PhotonNetwork.ConnectUsingSettings();  // Connects to Master photon server.
 		} else if (!PhotonNetwork.InLobby) {
@@ -37,6 +36,13 @@ public class PhotonLobby : MonoBehaviourPunCallbacks {
 			_LobbyJoined();
 		}
 	}
+
+#if DEBUG
+	private void OnGUI() {
+		GUILayout.Label(PhotonNetwork.NetworkStatisticsToString());
+		GUILayout.Label(PhotonNetwork.CurrentLobby.Name);
+	}
+#endif
 
 	public override void OnConnectedToMaster() {
 		Debug.Log("player has connected to the Photon master server");

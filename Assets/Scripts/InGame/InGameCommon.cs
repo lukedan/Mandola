@@ -17,4 +17,10 @@ public class InGameCommon : MonoBehaviourPunCallbacks {
 	public override void OnLeftRoom() {
 		SceneManager.LoadScene(SceneOnLeftRoom);
 	}
+
+#if DEBUG
+	private void OnGUI() {
+		GUILayout.Label(PhotonNetwork.NetworkStatisticsToString());
+	}
+#endif
 }
