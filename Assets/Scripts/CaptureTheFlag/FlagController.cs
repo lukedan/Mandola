@@ -51,10 +51,11 @@ public class FlagController : MonoBehaviour {
 	}
 
 	[PunRPC]
-	public void RPC_OnFlagCaptured(int team) {
-		_currentFlag.GetComponent<Animator>().SetTrigger("Captured");
+	public void RPC_OnFlagCaptured(int team, int flagViewId) {
+		PhotonView flagView = PhotonView.Find(flagViewId);
+		flagView.GetComponent<Animator>().SetTrigger("Captured");
 		_teams.OnScore(team);
-		Destroy(_currentFlag, 1.0f);
+		Destroy(flagView.gameObject, 1.0f); // TODO magic number
 		_currentFlag = null;
 	}
 }

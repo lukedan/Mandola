@@ -24,7 +24,8 @@ public class Flag : MonoBehaviour {
 			}
 			if (other.gameObject.layer == Utils.FlagZoneLayer) {
 				InGameCommon.CurrentGame.GetComponent<PhotonView>().RPC(
-					"RPC_OnFlagCaptured", RpcTarget.AllBufferedViaServer, other.GetComponent<FlagZone>().Team
+					"RPC_OnFlagCaptured", RpcTarget.AllBufferedViaServer,
+					other.GetComponent<FlagZone>().Team, _network.ViewID
 				);
 				GetComponent<Collider>().enabled = false;
 			}

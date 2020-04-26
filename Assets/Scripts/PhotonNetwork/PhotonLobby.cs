@@ -40,7 +40,7 @@ public class PhotonLobby : MonoBehaviourPunCallbacks {
 #if DEBUG
 	private void OnGUI() {
 		GUILayout.Label(PhotonNetwork.NetworkStatisticsToString());
-		GUILayout.Label(PhotonNetwork.CurrentLobby.Name);
+		GUILayout.Label(PhotonNetwork.CurrentCluster);
 	}
 #endif
 
