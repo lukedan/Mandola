@@ -14,7 +14,7 @@ public class CameraReflection : MonoBehaviour {
 	public Transform ProbeTransform;
 
 	private void Start() {
-		if (!transform.parent.GetComponent<PhotonView>().IsMine) {
+		if (!transform.GetComponent<PlayerCamera>().playerTransform.GetComponent<PhotonView>().IsMine) {
 			enabled = false;
 			ProbeTransform.GetComponent<ReflectionProbe>().enabled = false;
 		}

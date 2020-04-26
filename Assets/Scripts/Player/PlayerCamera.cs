@@ -1,12 +1,12 @@
-﻿using System.Collections;
+﻿using Photon.Realtime;
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using UnityEngine;
 
 public class PlayerCamera : MonoBehaviour
 {
-    //Player transform
-    public Transform playerTransform;
-
     //Resolution of game view
     private Vector2 screenResolution;
 
@@ -18,57 +18,40 @@ public class PlayerCamera : MonoBehaviour
     //Initial offset between camera and avatar
     private Vector3 currentOffset;
 
-    //When avatar dies, equals false
-    private bool onAvatar;
+    public Transform playerTransform;
+    
+    public void setPlayer(Transform T)
+    {
+        playerTransform = T;
+    }
 
     void Start()
     {
-        screenResolution = new Vector2(1024, 768);
+        screenResolution = new Vector2(Screen.width, Screen.height);
         offsetValue = new Vector3(13, 0, 10);
-        onAvatar = true;
         currentOffset = new Vector3(0, 0, 0);
     }
 
-    // Update is called once per frame
-    void Update()
+    public void UpdateCamera(Transform playerT, Vector3 initPosOffset, Vector3 initRotation)
     {
-        CameraShift();
-    }
+        if (Time.timeScale == 0)
+            return;
 
 
-    //Camera shifts according to the mouse position
-    private void CameraShift()
-    {
-        if (onAvatar)
-        {
-            offsetScaleX = ((Input.mousePosition.x - screenResolution.x * 0.5f) / (screenResolution.x * 0.5f));
-            offsetScaleZ = ((Input.mousePosition.y - screenResolution.y * 0.5f) / (screenResolution.y * 0.5f));
+        //Clamp the mouse position within the resolution of current window
+        float mousePosX = Mathf.Clamp(Input.mousePosition.x , - screenResolution.x, screenResolution.x);
+        float mousePosY = Mathf.Clamp(Input.mousePosition.y, -screenResolution.y, screenResolution.y);
 
-            Vector3 targetOffset = new Vector3(offsetScaleX * offsetValue.x, 0, offsetScaleZ * offsetValue.z);
+        offsetScaleX = ((mousePosX - screenResolution.x * 0.5f) / (screenResolution.x * 0.5f));
+        offsetScaleZ = ((mousePosY - screenResolution.y * 0.5f) / (screenResolution.y * 0.5f));
 
-            Vector3 velocity = (targetOffset - currentOffset) * 0.5f;
+        Vector3 targetOffset = new Vector3(offsetScaleX * offsetValue.x, 0, offsetScaleZ * offsetValue.z);
 
-            transform.position += velocity * Time.deltaTime;
-            currentOffset += velocity * Time.deltaTime;
-        }
-    }
+        Vector3 velocity = (targetOffset - currentOffset) * 0.5f;
 
-    // When avatar dies, set the camera static
-    public void DetachCameraFromAvatar()
-    {
-        onAvatar = false;
-        transform.parent = null;
-        Debug.Log("Detach camera");
+        currentOffset += velocity * Time.deltaTime;
 
-        //Destroy camera 3 scends after the avatar dies
-        Invoke("DestroyCamera", 3);
-    }
-
-    //Destroy camera
-    private void DestroyCamera()
-    {
-        Debug.Log("Destroy camera");
-        Destroy(gameObject);
-        // TO DO : transfer the view to another camera or load scene
+        transform.position = playerT.position + initPosOffset + currentOffset;
+        transform.rotation = Quaternion.Euler(initRotation);
     }
 }
