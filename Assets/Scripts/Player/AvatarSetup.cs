@@ -13,6 +13,11 @@ public class AvatarSetup : MonoBehaviour
     public Camera myCamera;
     public AudioListener myAL;
 
+    public GameObject cameraPrefab;
+
+    public Vector3 initialPositionOffset = new Vector3(0, 23, -15);
+    public Vector3 initialRotation = new Vector3(53, 0, 0);
+
     // Start is called before the first frame update
     void Start()
     {
@@ -20,6 +25,8 @@ public class AvatarSetup : MonoBehaviour
         if (PV.IsMine)
         {
             PV.RPC("RPC_AddCharacter", RpcTarget.AllBuffered, PlayerInfo.PI.mySelectedCharacter);
+            Instantiate(cameraPrefab, transform.position + initialPositionOffset, Quaternion.Euler(initialRotation));
+            cameraPrefab.GetComponent<PlayerCamera>().playerTransform = transform;
         }
         else
         {

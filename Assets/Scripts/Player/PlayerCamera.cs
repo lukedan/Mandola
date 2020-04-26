@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class PlayerCamera : MonoBehaviour
 {
+    //Player transform
+    public Transform playerTransform;
+
     //Resolution of game view
     private Vector2 screenResolution;
 
