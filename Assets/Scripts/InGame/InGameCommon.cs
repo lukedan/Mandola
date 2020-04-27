@@ -29,6 +29,10 @@ public class InGameCommon : MonoBehaviourPunCallbacks {
 	/// </summary>
 	public PostProcessVolume GlobalPostProcessing;
 	/// <summary>
+	/// Spawns the terrain.
+	/// </summary>
+	public PrismSpawner TerrainSpawner;
+	/// <summary>
 	/// Spawn points for each team.
 	/// </summary>
 	public List<SpawnList> TeamSpawns;
@@ -44,7 +48,7 @@ public class InGameCommon : MonoBehaviourPunCallbacks {
 
 	private float _respawnDelay = -1.0f;
 
-	private void Start() {
+	private void Awake() {
 		CurrentGame = this;
 	}
 
@@ -79,6 +83,21 @@ public class InGameCommon : MonoBehaviourPunCallbacks {
 	public override void OnLeftRoom() {
 		SceneManager.LoadScene(SceneOnLeftRoom);
 	}
+
+
+	[PunRPC]
+	void RPC_AlterTerrain(Vector2 v, float radius, float delta) {
+		if (TerrainSpawner.Spawned) {
+			Utils.AlterTerrainInCylinder(v, radius, delta, false);
+		} else {
+			TerrainSpawner.CachedTerrainModifications.Add(new PrismSpawner.TerrainModification {
+				Position = v,
+				Radius = radius,
+				Delta = delta
+			});
+		}
+	}
+
 
 #if DEBUG
 	private void OnGUI() {

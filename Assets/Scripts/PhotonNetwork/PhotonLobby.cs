@@ -126,7 +126,8 @@ public class PhotonLobby : MonoBehaviourPunCallbacks {
 		RoomOptions roomOps = new RoomOptions() {
 			IsVisible = true,
 			IsOpen = true,
-			MaxPlayers = 6
+			MaxPlayers = 6,
+			CleanupCacheOnLeave = false
 		};
 		roomOps.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable();
 		roomOps.CustomRoomProperties.Add(RespawnDelayPropertyName, 5.0f);

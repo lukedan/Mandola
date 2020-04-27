@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class DebugAlterTerrainInRange : MonoBehaviour {
-	private PhotonView _network;
+	private PhotonView _gameNetwork;
 
 	private void Start() {
-		_network = GetComponent<PhotonView>();
+		_gameNetwork = InGameCommon.CurrentGame.GetComponent<PhotonView>();
 	}
 
 	void Update() {
@@ -17,16 +17,11 @@ public class DebugAlterTerrainInRange : MonoBehaviour {
 				float.PositiveInfinity, 1 << Utils.TerrainLayer
 			);
 			if (hit.collider != null) {
-				_network.RPC(
+				_gameNetwork.RPC(
 					"RPC_AlterTerrain", RpcTarget.AllBufferedViaServer,
 					new Vector2(hit.point.x, hit.point.z), 5.0f, Input.GetAxisRaw("Ability")
 				);
 			}
 		}
-	}
-
-	[PunRPC]
-	void RPC_AlterTerrain(Vector2 v, float radius, float delta) {
-		Utils.AlterTerrainInCylinder(v, radius, delta);
 	}
 }

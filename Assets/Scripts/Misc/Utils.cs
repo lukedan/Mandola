@@ -17,8 +17,9 @@ public static class Utils {
 	/// </summary>
 	/// <param name="center">The center position.</param>
 	/// <param name="radius">The radius.</param>
-	/// <param name="change">The change in levels.</param>
-	public static void AlterTerrainInCylinder(Vector2 center, float radius, float delta) {
+	/// <param name="delta">The change in height.</param>
+	/// <param name="immediate">Whether this change is immediate.</param>
+	public static void AlterTerrainInCylinder(Vector2 center, float radius, float delta, bool immediate) {
 		Collider[] cols = Physics.OverlapCapsule(
 			new Vector3(center.x, -200.0f, center.y), new Vector3(center.x, 200.0f, center.y), radius,
 			1 << TerrainLayer
@@ -26,7 +27,11 @@ public static class Utils {
 		foreach (Collider c in cols) {
 			PrismMover mover = c.GetComponent<PrismMover>();
 			if (mover != null) {
-				mover.ChangeHeight(delta);
+				if (immediate) {
+					mover.ChangeHeightImmediate(delta);
+				} else {
+					mover.ChangeHeight(delta);
+				}
 			}
 		}
 	}

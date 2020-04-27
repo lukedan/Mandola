@@ -83,4 +83,16 @@ public class PrismMover : MonoBehaviour {
 		_changingLevel =
 			transform.localPosition.y > _targetHeight ? LevelChange.Downwards : LevelChange.Upwards;
 	}
+
+	/// <summary>
+	/// Immediately changes the height of this prism.
+	/// </summary>
+	/// <param name="delta"></param>
+	public void ChangeHeightImmediate(float delta) {
+		_targetHeight = Mathf.Clamp(_targetHeight + delta, MinHeight, MaxHeight);
+		_changingLevel = LevelChange.NotChanging;
+		Vector3 pos = transform.localPosition;
+		pos.y = _targetHeight;
+		transform.localPosition = pos;
+	}
 }
