@@ -106,6 +106,7 @@ MonoBehaviour:
   MaximumVelocity: 7
   Gravity: 30
   Acceleration: 80
+  JumpVelocity: 12
 --- !u!114 &6815913779286827142
 MonoBehaviour:
   m_ObjectHideFlags: 0

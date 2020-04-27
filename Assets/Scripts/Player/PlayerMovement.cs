@@ -20,6 +20,10 @@ public class PlayerMovement : MonoBehaviour {
 	/// The maximum acceleration of the player.
 	/// </summary>
 	public float Acceleration = 10.0f;
+	/// <summary>
+	/// Jumping velocity.
+	/// </summary>
+	public float JumpVelocity = 12.0f;
 
 	void Start() {
 		_network = GetComponent<PhotonView>();
@@ -52,10 +56,12 @@ public class PlayerMovement : MonoBehaviour {
 		curVel.x = targetVelXZ.x;
 		curVel.z = targetVelXZ.y;
 
-		// gravity
-		if (_controller.isGrounded) {
+		// jumping & gravity
+		if (_controller.isGrounded && Input.GetButton("Jump")) {
+			curVel.y += JumpVelocity;
+		} else {
+			curVel.y -= Gravity * Time.deltaTime;
 		}
-		curVel.y -= Gravity * Time.deltaTime;
 
 		_controller.Move(curVel * Time.deltaTime);
 
