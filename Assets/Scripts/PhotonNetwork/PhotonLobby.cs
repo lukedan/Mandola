@@ -33,7 +33,7 @@ public class PhotonLobby : MonoBehaviourPunCallbacks {
 
 	private void Start() {
 		if (!PhotonNetwork.IsConnected) {
-			PhotonNetwork.ConnectUsingSettings();  // Connects to Master photon server.
+			PhotonNetwork.ConnectUsingSettings(); // Connects to Master photon server.
 		} else if (!PhotonNetwork.InLobby) {
 			PhotonNetwork.JoinLobby();
 		} else {
