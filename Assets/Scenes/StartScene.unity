@@ -222,7 +222,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -114.100006, y: 201.70001}
-  m_SizeDelta: {x: 200, y: 50}
+  m_SizeDelta: {x: 250, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &354349213
 MonoBehaviour:
@@ -244,8 +244,9 @@ MonoBehaviour:
       m_Calls: []
   m_text: Mandola
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 125cb55b44b24c4393181402bc6200e6, type: 2}
-  m_sharedMaterial: {fileID: 2100000, guid: 125cb55b44b24c4393181402bc6200e6, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 816fcc20d20352c42a6cf94167a39dfe, type: 2}
+  m_sharedMaterial: {fileID: 4481278343432824600, guid: 816fcc20d20352c42a6cf94167a39dfe,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -391,7 +392,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 800, y: 600}
@@ -507,8 +508,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4286715904
-  m_fontColor: {r: 0, g: 0.09253877, b: 0.509434, a: 1}
+    rgba: 4285394431
+  m_fontColor: {r: 1, g: 0.92888224, b: 0.4292453, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -665,8 +666,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4286715904
-  m_fontColor: {r: 0, g: 0.09253877, b: 0.509434, a: 1}
+    rgba: 4285394431
+  m_fontColor: {r: 1, g: 0.92888224, b: 0.4292453, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -950,8 +951,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4286715904
-  m_fontColor: {r: 0, g: 0.09253877, b: 0.509434, a: 1}
+    rgba: 4285394431
+  m_fontColor: {r: 1, g: 0.92888224, b: 0.4292453, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1356,13 +1357,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.07195624, g: 0.027100397, b: 0.1981132, a: 0.47058824}
+  m_Color: {r: 0.4899387, g: 0.47912958, b: 0.9150943, a: 0.9019608}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: c658a07fc189d544b8bdb1751dbe2d6f, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
