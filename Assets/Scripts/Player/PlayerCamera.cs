@@ -18,6 +18,9 @@ public class PlayerCamera : MonoBehaviour {
 	public Vector3 initialPositionOffset = new Vector3(0, 23, -15);
 	public Vector3 initialRotation = new Vector3(53, 0, 0);
 
+	//Scalar, to control the velocity of camera shift
+	public float shiftingVelocityScalar = 0.8f;
+
 	private void Start() {
 		offsetValue = new Vector3(13, 0, 10);
 	}
@@ -31,15 +34,15 @@ public class PlayerCamera : MonoBehaviour {
 			Vector2 screenResolution = new Vector2(Screen.width, Screen.height);
 
 			// Clamp the mouse position within the resolution of current window
-			float mousePosX = Mathf.Clamp(Input.mousePosition.x, -screenResolution.x, screenResolution.x);
-			float mousePosY = Mathf.Clamp(Input.mousePosition.y, -screenResolution.y, screenResolution.y);
+			float mousePosX = Mathf.Clamp(Input.mousePosition.x, 0, screenResolution.x);
+			float mousePosY = Mathf.Clamp(Input.mousePosition.y, 0, screenResolution.y);
 
 			offsetScaleX = ((mousePosX - screenResolution.x * 0.5f) / (screenResolution.x * 0.5f));
 			offsetScaleZ = ((mousePosY - screenResolution.y * 0.5f) / (screenResolution.y * 0.5f));
 
 			Vector3 targetOffset = new Vector3(offsetScaleX * offsetValue.x, 0, offsetScaleZ * offsetValue.z);
 
-			Vector3 velocity = (targetOffset - currentOffset) * 0.5f;
+			Vector3 velocity = (targetOffset - currentOffset) * shiftingVelocityScalar;
 
 			currentOffset += velocity * Time.deltaTime;
 
