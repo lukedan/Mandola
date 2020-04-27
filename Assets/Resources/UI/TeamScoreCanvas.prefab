@@ -93,3 +93,4 @@ MonoBehaviour:
   TeamColor: {r: 0, g: 0, b: 0, a: 0}
   TeamIndex: 0
   scoreText: {fileID: 0}
+  score: 0
