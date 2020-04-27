@@ -8,6 +8,8 @@ using UnityEngine.UI;
 public class PhotonLobby : MonoBehaviourPunCallbacks {
 	public static PhotonLobby lobby;
 
+	public const string RespawnDelayPropertyName = "respawnDelay";
+
 	public GameObject ConnectingIndicator;
 	public GameObject RoomOperationArea;
 	public GameObject cancelButton;
@@ -121,7 +123,13 @@ public class PhotonLobby : MonoBehaviourPunCallbacks {
 	private void _CreateRoom(string name) {
 		Debug.Log("trying to create room " + name);
 		_OnStartedJoiningRoom();
-		RoomOptions roomOps = new RoomOptions() { IsVisible = true, IsOpen = true, MaxPlayers = 6 };
+		RoomOptions roomOps = new RoomOptions() {
+			IsVisible = true,
+			IsOpen = true,
+			MaxPlayers = 6
+		};
+		roomOps.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable();
+		roomOps.CustomRoomProperties.Add(RespawnDelayPropertyName, 5.0f);
 		PhotonNetwork.CreateRoom(name, roomOps);
 	}
 	private void _CreateRoomWithRandomName() {

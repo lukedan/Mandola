@@ -65,16 +65,18 @@ public class PlayerGeneralInfo : MonoBehaviour, IPunInstantiateMagicCallback {
 	public void RPC_OnHit(float damage) {
 		Debug.Assert(_network.IsMine);
 		Health -= damage;
-		float val = _damageEffect.intensity.value;
-		_damageEffect.intensity.Override(Mathf.Min(val + DamageEffectExaggeration, DamageEffectClamp));
+		_damageEffect.intensity.Override(Mathf.Min(
+			_damageEffect.intensity.value + DamageEffectExaggeration, DamageEffectClamp
+		));
 		if (Health < 0.0f) {
-			// player is dead
 			// drop flag
 			Flag flag = GetComponentInChildren<Flag>();
 			if (flag) {
 				flag.GetComponent<PhotonView>().RPC("RPC_OnPlayerKilled", RpcTarget.All);
 			}
-			// TODO
+			// destroy the player
+			PhotonNetwork.Destroy(gameObject);
+			InGameCommon.CurrentGame.OnPlayerKilled();
 		}
 	}
 

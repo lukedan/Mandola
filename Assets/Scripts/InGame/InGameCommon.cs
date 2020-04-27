@@ -33,15 +33,47 @@ public class InGameCommon : MonoBehaviourPunCallbacks {
 	/// </summary>
 	public List<SpawnList> TeamSpawns;
 
+	/// <summary>
+	/// The team to spawn the player with.
+	/// </summary>
+	public int PlayerTeam = -1;
+	/// <summary>
+	/// How quickly the damage effect decays after death.
+	/// </summary>
+	public float DeadEffectDecay = 2.0f;
+
+	private float _respawnDelay = -1.0f;
+
 	private void Start() {
 		CurrentGame = this;
-		int playerTeam = 0;
-		SpawnList list = TeamSpawns[playerTeam];
-		Transform selectedSpawn = list.Spawns[Random.Range(0, list.Spawns.Count)];
-		MyPlayer = PhotonNetwork.Instantiate(
-			Path.Combine("PlayerPrefabs", "PlayerAvatar"), selectedSpawn.position, selectedSpawn.rotation, 0,
-			new object[] { playerTeam, PlayerInfo.PI.mySelectedCharacter }
-		);
+	}
+
+	private void Update() {
+		if (!MyPlayer) {
+			if (PlayerTeam >= 0 && _respawnDelay < 0.0f) {
+				SpawnList list = TeamSpawns[PlayerTeam];
+				Transform selectedSpawn = list.Spawns[Random.Range(0, list.Spawns.Count)];
+				MyPlayer = PhotonNetwork.Instantiate(
+					Path.Combine("PlayerPrefabs", "PlayerAvatar"), selectedSpawn.position, selectedSpawn.rotation, 0,
+					new object[] { PlayerTeam, PlayerInfo.PI.mySelectedCharacter }
+				);
+			} else {
+				_respawnDelay -= Time.deltaTime;
+				// visual effects
+				ChromaticAberration settings;
+				GlobalPostProcessing.profile.TryGetSettings(out settings);
+				settings.intensity.Override(Mathf.Max(
+					0.0f, settings.intensity.value - DeadEffectDecay * Time.deltaTime
+				));
+			}
+		}
+	}
+
+	/// <summary>
+	/// Resets <see cref="_respawnDelay"/> based on room settings.
+	/// </summary>
+	public void OnPlayerKilled() {
+		_respawnDelay = (float)PhotonNetwork.CurrentRoom.CustomProperties[PhotonLobby.RespawnDelayPropertyName];
 	}
 
 	public override void OnLeftRoom() {

@@ -52,7 +52,7 @@ MonoBehaviour:
   ShootInaccuracy: 0.1
   MaximumInaccuracy: 2
   AccuracyRestore: 1
-  BulletColor: {r: 0, g: 1, b: 1, a: 0}
+  BulletColor: {r: 0, g: 1, b: 1, a: 1}
   BulletColorIntensity: 1
   BulletDamage: 0.1
   MaxBulletBounces: 5
