@@ -19,7 +19,7 @@ public class PlayerCamera : MonoBehaviour {
 	public Vector3 initialRotation = new Vector3(53, 0, 0);
 
 	//Scalar, to control the velocity of camera shift
-	public float shiftingVelocityScalar = 0.8f;
+	public float shiftingVelocityScalar = 10.0f;
 
 	private void Start() {
 		offsetValue = new Vector3(13, 0, 10);
@@ -42,9 +42,9 @@ public class PlayerCamera : MonoBehaviour {
 
 			Vector3 targetOffset = new Vector3(offsetScaleX * offsetValue.x, 0, offsetScaleZ * offsetValue.z);
 
-			Vector3 velocity = (targetOffset - currentOffset) * shiftingVelocityScalar;
+			Vector3 diff = targetOffset - currentOffset;
 
-			currentOffset += velocity * Time.deltaTime;
+			currentOffset += diff * (1.0f - Mathf.Exp(-Time.deltaTime * shiftingVelocityScalar));
 
 			transform.position = playerTransform.position + initialPositionOffset + currentOffset;
 			transform.rotation = Quaternion.Euler(initialRotation);
