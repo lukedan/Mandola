@@ -62,6 +62,8 @@ MonoBehaviour:
   FireOffset: 1
   NumReserveBullets: 128
   AimIndicator: {fileID: 1669974915168516615}
+  bulletBarPrefab: {fileID: -7156405144664765674, guid: f106d95fe46c8b442abfabdf939114fe,
+    type: 3}
 --- !u!1001 &4745722817049177341
 PrefabInstance:
   m_ObjectHideFlags: 0

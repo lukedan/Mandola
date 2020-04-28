@@ -93,6 +93,10 @@ public class BasicGun : GunBase {
 
 	private PhotonView _network;
 
+	public BulletBar bulletBarPrefab;
+
+	private BulletBar bulletBar;
+
 
 	void Start() {
 		Transform parent = transform.parent;
@@ -104,6 +108,19 @@ public class BasicGun : GunBase {
 		_parentVelocity = parent.GetComponent<CharacterController>();
 
 		_instantReload();
+		CreateBulletBar();
+	}
+
+	private void CreateBulletBar()
+	{
+		if (_network.IsMine)
+		{
+			Vector2 screenResolution = new Vector2(Screen.width, Screen.height);
+			bulletBar = Instantiate<BulletBar>(bulletBarPrefab);
+			bulletBar.transform.SetParent(FindObjectOfType<Canvas>().transform);
+			bulletBar.transform.position += new Vector3(screenResolution.x, screenResolution.y, 0);
+			bulletBar.setBullet((float)_numClipBullets / (float)ClipSize);
+		}
 	}
 
 	/// <summary>
@@ -195,5 +212,7 @@ public class BasicGun : GunBase {
 				_freshTrigger = true;
 			}
 		}
+
+		bulletBar.setBullet((float)_numClipBullets / (float)ClipSize);
 	}
 }
