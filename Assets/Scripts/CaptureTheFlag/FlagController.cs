@@ -6,7 +6,7 @@ using System.IO;
 using UnityEngine;
 
 public class FlagController : MonoBehaviourPunCallbacks {
-	public List<Transform> Spawns = new List<Transform>();
+	public List<SpawnPoint> Spawns = new List<SpawnPoint>();
 
 	/// <summary>
 	/// The delay after the flag has been captured before another flag will be spawned.
@@ -30,7 +30,7 @@ public class FlagController : MonoBehaviourPunCallbacks {
 		_countdown = FirstSpawnDelay;
 	}
 
-	protected virtual Transform _PickSpawn() {
+	protected virtual SpawnPoint _PickSpawn() {
 		return Spawns[Random.Range(0, Spawns.Count)];
 	}
 
@@ -38,10 +38,13 @@ public class FlagController : MonoBehaviourPunCallbacks {
 		if (_network.IsMine) {
 			if (!_currentFlag) {
 				if (_countdown < 0.0f) {
-					Transform spawn = _PickSpawn();
-					_currentFlag = PhotonNetwork.InstantiateSceneObject(
-						Path.Combine("CaptureTheFlag", "Flag"), spawn.position, spawn.rotation
-					);
+					SpawnPoint spawn = _PickSpawn();
+					Vector3? pos = spawn.GetSpawnLocation();
+					if (pos.HasValue) {
+						_currentFlag = PhotonNetwork.InstantiateSceneObject(
+							Path.Combine("CaptureTheFlag", "Flag"), pos.Value, Quaternion.identity
+						);
+					}
 				} else {
 					_countdown -= Time.deltaTime;
 				}

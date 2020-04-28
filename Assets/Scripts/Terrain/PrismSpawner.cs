@@ -34,7 +34,7 @@ public class PrismSpawner : MonoBehaviour {
 	/// </summary>
 	public float MinHeight = -4.0f;
 
-	public bool Spawned { get; private set; } = false;
+	public bool Ready { get; private set; } = false;
 
 	/// <summary>
 	/// The spacing between consecutive rows of prisms.
@@ -68,10 +68,9 @@ public class PrismSpawner : MonoBehaviour {
 
 	private IEnumerator _WaitForPrismReady() {
 		// very hacky way to ensure that all prisms are spawned and ready
-		for (int i = 0; i < 2; ++i) {
-			yield return new WaitForFixedUpdate();
-		}
-		Spawned = true;
+		yield return new WaitForFixedUpdate();
+
+		Ready = true;
 		foreach (TerrainModification mod in CachedTerrainModifications) {
 			Utils.AlterTerrainInCylinder(mod.Position, mod.Radius, mod.Delta, true);
 		}

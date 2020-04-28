@@ -48,7 +48,6 @@ public class PlayerGeneralInfo : MonoBehaviour, IPunInstantiateMagicCallback {
 	{
 		_network = GetComponent<PhotonView>();
 		InGameCommon.CurrentGame.GlobalPostProcessing.profile.TryGetSettings(out _damageEffect);
-
 		CreateHealthBar();
 	}
 

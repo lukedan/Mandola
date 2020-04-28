@@ -3,6 +3,7 @@ using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.SceneManagement;
@@ -12,7 +13,7 @@ public class InGameCommon : MonoBehaviourPunCallbacks {
 
 	[System.Serializable]
 	public class SpawnList {
-		public List<Transform> Spawns;
+		public List<SpawnPoint> Spawns;
 	}
 
 	public string SceneOnLeftRoom = "NetworkScene";
@@ -38,6 +39,11 @@ public class InGameCommon : MonoBehaviourPunCallbacks {
 	public List<SpawnList> TeamSpawns;
 
 	/// <summary>
+	/// Records avatars that will be destroyed when a player leaves the room.
+	/// </summary>
+	public Dictionary<int, GameObject> PlayerAvatars = new Dictionary<int, GameObject>();
+
+	/// <summary>
 	/// The team to spawn the player with.
 	/// </summary>
 	public int PlayerTeam = -1;
@@ -56,11 +62,14 @@ public class InGameCommon : MonoBehaviourPunCallbacks {
 		if (!MyPlayer) {
 			if (PlayerTeam >= 0 && _respawnDelay < 0.0f) {
 				SpawnList list = TeamSpawns[PlayerTeam];
-				Transform selectedSpawn = list.Spawns[Random.Range(0, list.Spawns.Count)];
-				MyPlayer = PhotonNetwork.Instantiate(
-					Path.Combine("PlayerPrefabs", "PlayerAvatar"), selectedSpawn.position, selectedSpawn.rotation, 0,
-					new object[] { PlayerTeam, PlayerInfo.PI.mySelectedCharacter }
-				);
+				SpawnPoint selectedSpawn = list.Spawns[Random.Range(0, list.Spawns.Count)];
+				Vector3? spawnPos = selectedSpawn.GetSpawnLocation();
+				if (spawnPos.HasValue) {
+					MyPlayer = PhotonNetwork.Instantiate(
+						Path.Combine("PlayerPrefabs", "PlayerAvatar"), spawnPos.Value, Quaternion.identity, 0,
+						new object[] { PlayerTeam, PlayerInfo.PI.mySelectedCharacter }
+					);
+				}
 			} else {
 				_respawnDelay -= Time.deltaTime;
 				// visual effects
@@ -80,6 +89,15 @@ public class InGameCommon : MonoBehaviourPunCallbacks {
 		_respawnDelay = (float)PhotonNetwork.CurrentRoom.CustomProperties[PhotonLobby.RespawnDelayPropertyName];
 	}
 
+	public override void OnPlayerLeftRoom(Player otherPlayer) {
+		base.OnPlayerLeftRoom(otherPlayer);
+		if (PhotonNetwork.IsMasterClient) {
+			if (PlayerAvatars.TryGetValue(otherPlayer.ActorNumber, out GameObject avatar)) {
+				PhotonNetwork.Destroy(avatar);
+				PlayerAvatars.Remove(otherPlayer.ActorNumber);
+			}
+		}
+	}
 	public override void OnLeftRoom() {
 		SceneManager.LoadScene(SceneOnLeftRoom);
 	}
@@ -87,7 +105,7 @@ public class InGameCommon : MonoBehaviourPunCallbacks {
 
 	[PunRPC]
 	void RPC_AlterTerrain(Vector2 v, float radius, float delta) {
-		if (TerrainSpawner.Spawned) {
+		if (TerrainSpawner.Ready) {
 			Utils.AlterTerrainInCylinder(v, radius, delta, false);
 		} else {
 			TerrainSpawner.CachedTerrainModifications.Add(new PrismSpawner.TerrainModification {
