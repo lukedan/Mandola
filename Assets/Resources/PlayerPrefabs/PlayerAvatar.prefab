@@ -126,6 +126,8 @@ MonoBehaviour:
   DamageEffectAtMinimumHealth: 1
   DamageEffectClamp: 3
   Team: 0
+  healthBarPrefab: {fileID: 2406784933592585804, guid: 99d04a4c7211d6d4d878c54055631044,
+    type: 3}
 --- !u!1001 &7804407771847318928
 PrefabInstance:
   m_ObjectHideFlags: 0
