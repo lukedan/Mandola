@@ -13,7 +13,7 @@ public class InGameCommon : MonoBehaviourPunCallbacks {
 
 	[System.Serializable]
 	public class SpawnList {
-		public List<Transform> Spawns;
+		public List<SpawnPoint> Spawns;
 	}
 
 	public string SceneOnLeftRoom = "NetworkScene";
@@ -62,11 +62,14 @@ public class InGameCommon : MonoBehaviourPunCallbacks {
 		if (!MyPlayer) {
 			if (PlayerTeam >= 0 && _respawnDelay < 0.0f) {
 				SpawnList list = TeamSpawns[PlayerTeam];
-				Transform selectedSpawn = list.Spawns[Random.Range(0, list.Spawns.Count)];
-				MyPlayer = PhotonNetwork.Instantiate(
-					Path.Combine("PlayerPrefabs", "PlayerAvatar"), selectedSpawn.position, selectedSpawn.rotation, 0,
-					new object[] { PlayerTeam, PlayerInfo.PI.mySelectedCharacter }
-				);
+				SpawnPoint selectedSpawn = list.Spawns[Random.Range(0, list.Spawns.Count)];
+				Vector3? spawnPos = selectedSpawn.GetSpawnLocation();
+				if (spawnPos.HasValue) {
+					MyPlayer = PhotonNetwork.Instantiate(
+						Path.Combine("PlayerPrefabs", "PlayerAvatar"), spawnPos.Value, Quaternion.identity, 0,
+						new object[] { PlayerTeam, PlayerInfo.PI.mySelectedCharacter }
+					);
+				}
 			} else {
 				_respawnDelay -= Time.deltaTime;
 				// visual effects
@@ -102,7 +105,7 @@ public class InGameCommon : MonoBehaviourPunCallbacks {
 
 	[PunRPC]
 	void RPC_AlterTerrain(Vector2 v, float radius, float delta) {
-		if (TerrainSpawner.Spawned) {
+		if (TerrainSpawner.Ready) {
 			Utils.AlterTerrainInCylinder(v, radius, delta, false);
 		} else {
 			TerrainSpawner.CachedTerrainModifications.Add(new PrismSpawner.TerrainModification {
