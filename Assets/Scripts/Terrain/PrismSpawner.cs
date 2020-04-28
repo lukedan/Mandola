@@ -2,10 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum TerrainAlterationType {
+	Radial = 0,
+	Wall = 1,
+	None = 255
+}
+
 public class PrismSpawner : MonoBehaviour {
 	public struct TerrainModification {
+		public TerrainAlterationType Type;
 		public Vector2 Position;
-		public float Radius;
+		public Vector2 Forward;
+		public float RadiusOrLength;
 		public float Delta;
 	}
 
@@ -16,7 +24,7 @@ public class PrismSpawner : MonoBehaviour {
 	/// <summary>
 	/// The scale applied to prisms.
 	/// </summary>
-	public float PrismScale = 2.0f;
+	public float PrismScale = 3.0f;
 	/// <summary>
 	/// The number of prisms on the X axis.
 	/// </summary>
@@ -34,14 +42,32 @@ public class PrismSpawner : MonoBehaviour {
 	/// </summary>
 	public float MinHeight = -4.0f;
 
-	public bool Spawned { get; private set; } = false;
+	public bool Ready { get; private set; } = false;
 
 	/// <summary>
 	/// The spacing between consecutive rows of prisms.
 	/// </summary>
 	private static readonly float HalfSqrt3 = 0.5f * Mathf.Sqrt(3.0f);
 
-	public List<TerrainModification> CachedTerrainModifications = new List<TerrainModification>();
+	private List<TerrainModification> _cachedTerrainModifications = new List<TerrainModification>();
+
+	private void _PerformTerrainModification(TerrainModification mod, bool immediate) {
+		switch (mod.Type) {
+			case TerrainAlterationType.Radial:
+				Utils.AlterTerrainInCylinder(mod.Position, mod.RadiusOrLength, mod.Delta, immediate);
+				break;
+			case TerrainAlterationType.Wall:
+				Utils.AlterTerrainWall(mod.Position, mod.Forward, mod.RadiusOrLength, mod.Delta, immediate);
+				break;
+		}
+	}
+	public void TryPerformTerrainModification(TerrainModification mod) {
+		if (Ready) {
+			_PerformTerrainModification(mod, false);
+		} else {
+			_cachedTerrainModifications.Add(mod);
+		}
+	}
 
 	private void Awake() {
 		bool flip = false;
@@ -68,12 +94,12 @@ public class PrismSpawner : MonoBehaviour {
 
 	private IEnumerator _WaitForPrismReady() {
 		// very hacky way to ensure that all prisms are spawned and ready
-		for (int i = 0; i < 2; ++i) {
-			yield return new WaitForFixedUpdate();
+		yield return new WaitForFixedUpdate();
+
+		Ready = true;
+		foreach (TerrainModification mod in _cachedTerrainModifications) {
+			_PerformTerrainModification(mod, true);
 		}
-		Spawned = true;
-		foreach (TerrainModification mod in CachedTerrainModifications) {
-			Utils.AlterTerrainInCylinder(mod.Position, mod.Radius, mod.Delta, true);
-		}
+		_cachedTerrainModifications = null;
 	}
 }

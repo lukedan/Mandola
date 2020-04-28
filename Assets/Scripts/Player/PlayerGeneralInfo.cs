@@ -4,6 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 
+public enum PlayerControlState {
+	Shooting,
+	TerrainAlteration
+}
+
 public class PlayerGeneralInfo : MonoBehaviour, IPunInstantiateMagicCallback {
 	/// <summary>
 	/// Player health.
@@ -31,6 +36,11 @@ public class PlayerGeneralInfo : MonoBehaviour, IPunInstantiateMagicCallback {
 	public float DamageEffectClamp = 3.0f;
 
 	/// <summary>
+	/// The control state of this player.
+	/// </summary>
+	public PlayerControlState ControlState = PlayerControlState.Shooting;
+
+	/// <summary>
 	/// The team this player belongs to.
 	/// </summary>
 	public int Team = 0;
@@ -39,10 +49,28 @@ public class PlayerGeneralInfo : MonoBehaviour, IPunInstantiateMagicCallback {
 
 	private PhotonView _network;
 
-	private void Start() {
+	public HealthBar healthBarPrefab;
+
+	private HealthBar healthBar;
+
+
+	private void Start()
+	{
 		_network = GetComponent<PhotonView>();
 		InGameCommon.CurrentGame.GlobalPostProcessing.profile.TryGetSettings(out _damageEffect);
-		InGameCommon.CurrentGame.PlayerAvatars[_network.CreatorActorNr] = gameObject;
+		CreateHealthBar();
+	}
+
+	private void CreateHealthBar()
+	{
+		if (_network.IsMine)
+		{
+			Vector2 screenResolution = new Vector2(Screen.width, Screen.height);
+			healthBar = Instantiate<HealthBar>(healthBarPrefab);
+			healthBar.transform.SetParent(FindObjectOfType<Canvas>().transform);
+			healthBar.transform.position += new Vector3(screenResolution.x, screenResolution.y, 0);
+			healthBar.setHealth(Health);
+		}
 	}
 
 	private void Update() {
@@ -51,6 +79,12 @@ public class PlayerGeneralInfo : MonoBehaviour, IPunInstantiateMagicCallback {
 		_damageEffect.intensity.Override(Mathf.Max(
 			effectTarget, _damageEffect.intensity.value - Time.deltaTime * DamageEffectRecovery
 		));
+
+		// Update health bar
+		if (_network.IsMine)
+		{
+			healthBar.setHealth(Health);
+		}
 	}
 
 	void IPunInstantiateMagicCallback.OnPhotonInstantiate(PhotonMessageInfo info) {

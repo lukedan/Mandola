@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 2272352830137483709}
   - component: {fileID: 3645931372282962622}
   - component: {fileID: 6815913779286827142}
+  - component: {fileID: 1644150536033365623}
   m_Layer: 10
   m_Name: PlayerAvatar
   m_TagString: Untagged
@@ -125,7 +126,28 @@ MonoBehaviour:
   DamageEffectRecovery: 2
   DamageEffectAtMinimumHealth: 1
   DamageEffectClamp: 3
+  ControlState: 0
   Team: 0
+  healthBarPrefab: {fileID: 2406784933592585804, guid: 99d04a4c7211d6d4d878c54055631044,
+    type: 3}
+--- !u!114 &1644150536033365623
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5347505519682252453}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75c19419cf5180c439c506695473cf20, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RadialAlterationRadius: 5
+  RadialAlterationDelta: 1
+  WallAlterationDistance: 5
+  WallAlterationLength: 10
+  WallAlterationDelta: 3
+  Cooldown: 5
 --- !u!1001 &7804407771847318928
 PrefabInstance:
   m_ObjectHideFlags: 0

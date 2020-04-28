@@ -18,7 +18,7 @@ public class DebugAlterTerrainInRange : MonoBehaviour {
 			);
 			if (hit.collider != null) {
 				_gameNetwork.RPC(
-					"RPC_AlterTerrain", RpcTarget.AllBufferedViaServer,
+					"RPC_AlterTerrainRadial", RpcTarget.AllBufferedViaServer,
 					new Vector2(hit.point.x, hit.point.z), 5.0f, Input.GetAxisRaw("Ability")
 				);
 			}

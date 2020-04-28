@@ -6,9 +6,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour {
-	// A variable to determine whether game is paused or not
-	public static bool IsPaused = false;
-
 	public GameObject PausedMenuUI;
 
 	// Start is called before the first frame update
@@ -19,10 +16,10 @@ public class PauseMenu : MonoBehaviour {
 	// Update is called once per frame
 	void Update() {
 		if (Input.GetKeyDown(KeyCode.Escape)) {
-			if (IsPaused) {
+			if (InGameCommon.CurrentGame.IsPaused) {
 				ResumeGame();
 			} else {
-				IsPaused = true;
+				InGameCommon.CurrentGame.IsPaused = true;
 				PausedMenuUI.SetActive(true);
 			}
 		}
@@ -30,7 +27,7 @@ public class PauseMenu : MonoBehaviour {
 
 	// Make the pause menu invisible to resume the game
 	public void ResumeGame() {
-		IsPaused = false;
+		InGameCommon.CurrentGame.IsPaused = false;
 		PausedMenuUI.SetActive(false);
 	}
 
