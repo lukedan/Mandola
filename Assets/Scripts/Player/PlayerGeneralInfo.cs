@@ -42,7 +42,7 @@ public class PlayerGeneralInfo : MonoBehaviour, IPunInstantiateMagicCallback {
 	private void Start() {
 		_network = GetComponent<PhotonView>();
 		InGameCommon.CurrentGame.GlobalPostProcessing.profile.TryGetSettings(out _damageEffect);
-		InGameCommon.CurrentGame.PlayerAvatars[_network.OwnerActorNr] = gameObject;
+		InGameCommon.CurrentGame.PlayerAvatars[_network.CreatorActorNr] = gameObject;
 	}
 
 	private void Update() {

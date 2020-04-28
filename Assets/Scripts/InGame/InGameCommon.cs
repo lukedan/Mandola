@@ -38,6 +38,9 @@ public class InGameCommon : MonoBehaviourPunCallbacks {
 	/// </summary>
 	public List<SpawnList> TeamSpawns;
 
+	/// <summary>
+	/// Records avatars that will be destroyed when a player leaves the room.
+	/// </summary>
 	public Dictionary<int, GameObject> PlayerAvatars = new Dictionary<int, GameObject>();
 
 	/// <summary>
@@ -85,9 +88,11 @@ public class InGameCommon : MonoBehaviourPunCallbacks {
 
 	public override void OnPlayerLeftRoom(Player otherPlayer) {
 		base.OnPlayerLeftRoom(otherPlayer);
-		if (PlayerAvatars.TryGetValue(otherPlayer.ActorNumber, out GameObject avatar)) {
-			Destroy(avatar);
-			PlayerAvatars.Remove(otherPlayer.ActorNumber);
+		if (PhotonNetwork.IsMasterClient) {
+			if (PlayerAvatars.TryGetValue(otherPlayer.ActorNumber, out GameObject avatar)) {
+				PhotonNetwork.Destroy(avatar);
+				PlayerAvatars.Remove(otherPlayer.ActorNumber);
+			}
 		}
 	}
 	public override void OnLeftRoom() {
