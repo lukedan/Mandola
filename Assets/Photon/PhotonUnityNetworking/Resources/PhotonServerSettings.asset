@@ -42,6 +42,8 @@ MonoBehaviour:
   - RPC_OnPlayerGotFlag
   - RPC_OnPlayerKilled
   - RPC_OnScore
+  - RPC_AlterTerrainRadial
+  - RPC_AlterTerrainWall
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

@@ -2,10 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum TerrainAlterationType {
+	Radial = 0,
+	Wall = 1,
+	None = 255
+}
+
 public class PrismSpawner : MonoBehaviour {
 	public struct TerrainModification {
+		public TerrainAlterationType Type;
 		public Vector2 Position;
-		public float Radius;
+		public Vector2 Forward;
+		public float RadiusOrLength;
 		public float Delta;
 	}
 
@@ -16,7 +24,7 @@ public class PrismSpawner : MonoBehaviour {
 	/// <summary>
 	/// The scale applied to prisms.
 	/// </summary>
-	public float PrismScale = 2.0f;
+	public float PrismScale = 3.0f;
 	/// <summary>
 	/// The number of prisms on the X axis.
 	/// </summary>
@@ -41,7 +49,25 @@ public class PrismSpawner : MonoBehaviour {
 	/// </summary>
 	private static readonly float HalfSqrt3 = 0.5f * Mathf.Sqrt(3.0f);
 
-	public List<TerrainModification> CachedTerrainModifications = new List<TerrainModification>();
+	private List<TerrainModification> _cachedTerrainModifications = new List<TerrainModification>();
+
+	private void _PerformTerrainModification(TerrainModification mod, bool immediate) {
+		switch (mod.Type) {
+			case TerrainAlterationType.Radial:
+				Utils.AlterTerrainInCylinder(mod.Position, mod.RadiusOrLength, mod.Delta, immediate);
+				break;
+			case TerrainAlterationType.Wall:
+				Utils.AlterTerrainWall(mod.Position, mod.Forward, mod.RadiusOrLength, mod.Delta, immediate);
+				break;
+		}
+	}
+	public void TryPerformTerrainModification(TerrainModification mod) {
+		if (Ready) {
+			_PerformTerrainModification(mod, false);
+		} else {
+			_cachedTerrainModifications.Add(mod);
+		}
+	}
 
 	private void Awake() {
 		bool flip = false;
@@ -71,8 +97,9 @@ public class PrismSpawner : MonoBehaviour {
 		yield return new WaitForFixedUpdate();
 
 		Ready = true;
-		foreach (TerrainModification mod in CachedTerrainModifications) {
-			Utils.AlterTerrainInCylinder(mod.Position, mod.Radius, mod.Delta, true);
+		foreach (TerrainModification mod in _cachedTerrainModifications) {
+			_PerformTerrainModification(mod, true);
 		}
+		_cachedTerrainModifications = null;
 	}
 }

@@ -178,7 +178,7 @@ public class BasicGun : GunBase {
 			_fireCooldown -= deltaTime;
 			_inaccuracy = Mathf.Max(0.0f, _inaccuracy - deltaTime * AccuracyRestore);
 
-			bool firing = Input.GetButton("Fire");
+			bool firing = IsPlayerInShootingMode && Input.GetButton("Fire");
 			if (firing) {
 				while (CanFire) {
 					_fireCooldown += FiringDelay;

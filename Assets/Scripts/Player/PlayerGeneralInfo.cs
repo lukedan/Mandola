@@ -4,6 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 
+public enum PlayerControlState {
+	Shooting,
+	TerrainAlteration
+}
+
 public class PlayerGeneralInfo : MonoBehaviour, IPunInstantiateMagicCallback {
 	/// <summary>
 	/// Player health.
@@ -29,6 +34,11 @@ public class PlayerGeneralInfo : MonoBehaviour, IPunInstantiateMagicCallback {
 	/// Clamp the effect below this value.
 	/// </summary>
 	public float DamageEffectClamp = 3.0f;
+
+	/// <summary>
+	/// The control state of this player.
+	/// </summary>
+	public PlayerControlState ControlState = PlayerControlState.Shooting;
 
 	/// <summary>
 	/// The team this player belongs to.

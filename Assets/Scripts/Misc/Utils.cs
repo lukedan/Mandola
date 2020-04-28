@@ -35,4 +35,29 @@ public static class Utils {
 			}
 		}
 	}
+
+	/// <summary>
+	/// Alters prisms in a rectangular area.
+	/// </summary>
+	/// <param name="center"></param>
+	/// <param name="radius"></param>
+	/// <param name="delta"></param>
+	/// <param name="immediate"></param>
+	public static void AlterTerrainWall(Vector2 center, Vector2 forward, float length, float delta, bool immediate) {
+		Collider[] cols = Physics.OverlapBox(
+			new Vector3(center.x, 0.0f, center.y), new Vector3(0.5f * length, 200.0f, 0.0f),
+			Quaternion.FromToRotation(Vector3.forward, new Vector3(forward.x, 0.0f, forward.y)),
+			1 << TerrainLayer
+		);
+		foreach (Collider c in cols) {
+			PrismMover mover = c.GetComponent<PrismMover>();
+			if (mover != null) {
+				if (immediate) {
+					mover.ChangeHeightImmediate(delta);
+				} else {
+					mover.ChangeHeight(delta);
+				}
+			}
+		}
+	}
 }
