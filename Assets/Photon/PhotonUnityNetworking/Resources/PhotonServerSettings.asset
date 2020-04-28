@@ -23,7 +23,7 @@ MonoBehaviour:
     Port: 0
     Protocol: 0
     AuthMode: 0
-    EnableLobbyStatistics: 0
+    EnableLobbyStatistics: 1
     NetworkLogging: 1
   DevRegion: us
   PunLogging: 0
@@ -36,14 +36,13 @@ MonoBehaviour:
   - DestroySpaceship
   - Fire
   - RespawnSpaceship
-  - RPC_AlterTerrain
+  - RPC_AlterTerrainRadial
+  - RPC_AlterTerrainWall
   - RPC_OnFlagCaptured
   - RPC_OnHit
   - RPC_OnPlayerGotFlag
   - RPC_OnPlayerKilled
   - RPC_OnScore
-  - RPC_AlterTerrainRadial
-  - RPC_AlterTerrainWall
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
