@@ -27,7 +27,7 @@ public class Flag : MonoBehaviour {
 					"RPC_OnFlagCaptured", RpcTarget.AllBufferedViaServer,
 					other.GetComponent<FlagZone>().Team, _network.ViewID
 				);
-				GetComponent<Collider>().enabled = false;
+				Destroy(this);
 			}
 		}
 	}

@@ -1,10 +1,11 @@
 ﻿using Photon.Pun;
+using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-public class FlagController : MonoBehaviour {
+public class FlagController : MonoBehaviourPunCallbacks {
 	public List<Transform> Spawns = new List<Transform>();
 
 	/// <summary>
@@ -50,11 +51,23 @@ public class FlagController : MonoBehaviour {
 		}
 	}
 
+	public override void OnMasterClientSwitched(Player newMasterClient) {
+		base.OnMasterClientSwitched(newMasterClient);
+		if (newMasterClient.IsLocal) {
+			Debug.Assert(_network.IsMine);
+			Flag flag = FindObjectOfType<Flag>();
+			if (flag) {
+				_currentFlag = flag.gameObject;
+			}
+		}
+	}
+
 	[PunRPC]
 	public void RPC_OnFlagCaptured(int team, int flagViewId) {
 		PhotonView flagView = PhotonView.Find(flagViewId);
 		flagView.GetComponent<Animator>().SetTrigger("Captured");
 		_teams.OnScore(team);
+		Destroy(flagView.GetComponent<Flag>());
 		Destroy(flagView.gameObject, 1.0f); // TODO magic number
 		_currentFlag = null;
 	}
