@@ -3,6 +3,7 @@ using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.SceneManagement;
@@ -36,6 +37,8 @@ public class InGameCommon : MonoBehaviourPunCallbacks {
 	/// Spawn points for each team.
 	/// </summary>
 	public List<SpawnList> TeamSpawns;
+
+	public Dictionary<int, GameObject> PlayerAvatars = new Dictionary<int, GameObject>();
 
 	/// <summary>
 	/// The team to spawn the player with.
@@ -80,6 +83,13 @@ public class InGameCommon : MonoBehaviourPunCallbacks {
 		_respawnDelay = (float)PhotonNetwork.CurrentRoom.CustomProperties[PhotonLobby.RespawnDelayPropertyName];
 	}
 
+	public override void OnPlayerLeftRoom(Player otherPlayer) {
+		base.OnPlayerLeftRoom(otherPlayer);
+		if (PlayerAvatars.TryGetValue(otherPlayer.ActorNumber, out GameObject avatar)) {
+			Destroy(avatar);
+			PlayerAvatars.Remove(otherPlayer.ActorNumber);
+		}
+	}
 	public override void OnLeftRoom() {
 		SceneManager.LoadScene(SceneOnLeftRoom);
 	}
