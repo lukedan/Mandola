@@ -52,14 +52,16 @@ public class PrismSpawner : MonoBehaviour {
 	private List<TerrainModification> _cachedTerrainModifications = new List<TerrainModification>();
 
 	private void _PerformTerrainModification(TerrainModification mod, bool immediate) {
+		Collider[] cols = null;
 		switch (mod.Type) {
 			case TerrainAlterationType.Radial:
-				Utils.AlterTerrainInCylinder(mod.Position, mod.RadiusOrLength, mod.Delta, immediate);
+				cols = Utils.GetPrismsInCylinder(mod.Position, mod.RadiusOrLength);
 				break;
 			case TerrainAlterationType.Wall:
-				Utils.AlterTerrainWall(mod.Position, mod.Forward, mod.RadiusOrLength, mod.Delta, immediate);
+				cols = Utils.GetPrismsInWall(mod.Position, mod.Forward, mod.RadiusOrLength);
 				break;
 		}
+		Utils.AlterTerrain(cols, mod.Delta, immediate);
 	}
 	public void TryPerformTerrainModification(TerrainModification mod) {
 		if (Ready) {

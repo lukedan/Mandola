@@ -60,7 +60,7 @@ MonoBehaviour:
     type: 3}
   BulletSpeed: 50
   FireOffset: 1
-  NumReserveBullets: 40
+  NumReserveBullets: -1
   AimIndicator: {fileID: 1669974915168516615}
   NumPallets: 7
 --- !u!1001 &4745722817049177341

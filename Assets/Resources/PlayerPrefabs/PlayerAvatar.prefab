@@ -147,6 +147,12 @@ MonoBehaviour:
   WallAlterationDistance: 5
   WallAlterationLength: 10
   WallAlterationDelta: 3
+  PreviewMesh: {fileID: 4884029029223060906, guid: 461a887fc82bc3e41a613ce3364c3e71,
+    type: 3}
+  PreviewMaterial: {fileID: 2100000, guid: b0efcf1409693fb4bbadcfd5629a39e0, type: 2}
+  PreviewNotReadyMaterial: {fileID: 2100000, guid: 36d36f45ea005e64b9015d881489d057,
+    type: 2}
+  PreviewVerticalOffset: 0.1
   Cooldown: 5
 --- !u!1001 &7804407771847318928
 PrefabInstance:

@@ -17,6 +17,11 @@ public class TerrainAlteration : MonoBehaviour {
 	public float WallAlterationLength = 10.0f;
 	public float WallAlterationDelta = 3.0f;
 
+	public Mesh PreviewMesh;
+	public Material PreviewMaterial;
+	public Material PreviewNotReadyMaterial;
+	public float PreviewVerticalOffset = 0.1f;
+
 	/// <summary>
 	/// Cooldown in seconds.
 	/// </summary>
@@ -55,6 +60,12 @@ public class TerrainAlteration : MonoBehaviour {
 					float.PositiveInfinity, 1 << Utils.TerrainLayer
 				)) {
 					Vector2 hitXZ = new Vector2(hit.point.x, hit.point.z);
+					Vector2 pos = new Vector2(transform.position.x, transform.position.z);
+					Vector2 diff = hitXZ - pos;
+					if (type == TerrainAlterationType.Wall) {
+						diff = diff.normalized;
+						pos += diff * WallAlterationDistance;
+					}
 					if (Input.GetButton("Fire") && _cooldownValue < 0.0f) { // firing & can fire
 						float multiplier = Input.GetAxisRaw("Fire");
 						switch (type) {
@@ -65,9 +76,6 @@ public class TerrainAlteration : MonoBehaviour {
 								);
 								break;
 							case TerrainAlterationType.Wall:
-								Vector2 pos = new Vector2(transform.position.x, transform.position.z);
-								Vector2 diff = (hitXZ - pos).normalized;
-								pos += diff * WallAlterationDistance;
 								_gameNetwork.RPC(
 									"RPC_AlterTerrainWall", RpcTarget.AllBufferedViaServer,
 									pos, diff, WallAlterationLength, multiplier * WallAlterationDelta
@@ -75,8 +83,26 @@ public class TerrainAlteration : MonoBehaviour {
 								break;
 						}
 						_cooldownValue += Cooldown;
-					} else {
-						// TODO preview
+					} else { // show preview
+						Collider[] cols = null;
+						switch (type) {
+							case TerrainAlterationType.Radial:
+								cols = Utils.GetPrismsInCylinder(hitXZ, RadialAlterationRadius);
+								break;
+							case TerrainAlterationType.Wall:
+								cols = Utils.GetPrismsInWall(pos, diff, WallAlterationLength);
+								break;
+						}
+						Material mat = _cooldownValue < 0.0f ? PreviewMaterial : PreviewNotReadyMaterial;
+						foreach (Collider col in cols) {
+							Transform colTrans = col.transform;
+							Vector3 previewPos = colTrans.position;
+							previewPos.y += 0.5f * colTrans.localScale.y + PreviewVerticalOffset;
+							Graphics.DrawMesh(
+								PreviewMesh, Matrix4x4.TRS(previewPos, colTrans.localRotation, colTrans.localScale), mat,
+								0, Camera.main, 0, null, false, false, false
+							);
+						}
 					}
 				}
 			} else {

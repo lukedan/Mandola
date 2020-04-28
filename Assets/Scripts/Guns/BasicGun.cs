@@ -74,7 +74,8 @@ public class BasicGun : GunBase {
 
 	// state variables
 	/// <summary>
-	/// The number of reserve bullets, i.e., bullets that are not in the clip.
+	/// The number of reserve bullets, i.e., bullets that are not in the clip. If this is negative, then the gun has
+	/// infinite ammo.
 	/// </summary>
 	public int NumReserveBullets = 200;
 	private int _numClipBullets = 0;
@@ -127,10 +128,12 @@ public class BasicGun : GunBase {
 	/// Instantly reloads.
 	/// </summary>
 	private void _instantReload() {
-		int totalBullets = NumReserveBullets + _numClipBullets;
+		int totalBullets = NumReserveBullets < 0 ? ClipSize : NumReserveBullets + _numClipBullets;
 		int count = Math.Min(ClipSize, totalBullets);
 		_numClipBullets = count;
-		NumReserveBullets = totalBullets - count;
+		if (NumReserveBullets >= 0) {
+			NumReserveBullets = totalBullets - count;
+		}
 	}
 
 	public bool IsReloading => _reloadCooldown > 0.0f;
@@ -167,7 +170,7 @@ public class BasicGun : GunBase {
 	public override void Reload() {
 		// cannot reload while reloading
 		// cannot reload without reserve bullets
-		if (!IsReloading && NumReserveBullets > 0) {
+		if (!IsReloading && NumReserveBullets != 0 && _numClipBullets != ClipSize) {
 			_reloadCooldown = ReloadTime;
 		}
 	}

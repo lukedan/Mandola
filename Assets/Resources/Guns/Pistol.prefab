@@ -60,7 +60,7 @@ MonoBehaviour:
     type: 3}
   BulletSpeed: 50
   FireOffset: 1
-  NumReserveBullets: 60
+  NumReserveBullets: -1
   AimIndicator: {fileID: 4568322729719187386}
   bulletBarPrefab: {fileID: -7156405144664765674, guid: f106d95fe46c8b442abfabdf939114fe,
     type: 3}
