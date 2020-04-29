@@ -127,11 +127,4 @@ public class InGameCommon : MonoBehaviourPunCallbacks {
 			Delta = delta
 		});
 	}
-
-
-#if DEBUG
-	private void OnGUI() {
-		GUILayout.Label(PhotonNetwork.NetworkStatisticsToString());
-	}
-#endif
 }

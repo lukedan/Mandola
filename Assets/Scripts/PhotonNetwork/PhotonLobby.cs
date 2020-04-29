@@ -43,13 +43,6 @@ public class PhotonLobby : MonoBehaviourPunCallbacks {
 		}
 	}
 
-#if DEBUG
-	private void OnGUI() {
-		GUILayout.Label(PhotonNetwork.NetworkStatisticsToString());
-		GUILayout.Label(PhotonNetwork.CurrentCluster);
-	}
-#endif
-
 	public override void OnConnectedToMaster() {
 		Debug.Log("player has connected to the Photon master server");
 		PhotonNetwork.AutomaticallySyncScene = true;
@@ -118,7 +111,7 @@ public class PhotonLobby : MonoBehaviourPunCallbacks {
 		}
 	}
 
-	private	void _OnStartedJoiningRoom() {
+	private void _OnStartedJoiningRoom() {
 		RoomOperationArea.SetActive(false);
 		cancelButton.SetActive(true);
 	}
@@ -139,7 +132,7 @@ public class PhotonLobby : MonoBehaviourPunCallbacks {
 	private void _CreateRoomWithRandomName() {
 		_CreateRoom("Room " + Random.Range(0, 10000).ToString());
 	}
-	private	void _LobbyJoined() {
+	private void _LobbyJoined() {
 		ConnectingIndicator.SetActive(false);
 		RoomOperationArea.SetActive(true);
 	}

@@ -121,7 +121,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Health: 1
-  HealthRegen: 0.1
+  HealthRegen: 0
   DamageEffectExaggeration: 0.5
   DamageEffectRecovery: 2
   DamageEffectAtMinimumHealth: 1
