@@ -8,7 +8,9 @@ using UnityEngine.UI;
 public class PhotonLobby : MonoBehaviourPunCallbacks {
 	public static PhotonLobby lobby;
 
-	public const string RespawnDelayPropertyName = "respawnDelay";
+	public const string
+		RespawnDelayPropertyName = "respawnDelay",
+		MapNamePropertyName = "mapName";
 
 	public GameObject ConnectingIndicator;
 	public GameObject RoomOperationArea;
@@ -131,6 +133,7 @@ public class PhotonLobby : MonoBehaviourPunCallbacks {
 		};
 		roomOps.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable();
 		roomOps.CustomRoomProperties.Add(RespawnDelayPropertyName, 5.0f);
+		roomOps.CustomRoomProperties.Add(MapNamePropertyName, "test");
 		PhotonNetwork.CreateRoom(name, roomOps);
 	}
 	private void _CreateRoomWithRandomName() {

@@ -45,5 +45,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PrismObject: {fileID: 7074779291304004680, guid: 670e1fa4bb4241647b42f122a6fa37e2,
     type: 3}
+  PrismScale: 2
   NumPrismsX: 50
   NumPrismsZ: 50
+  MaxHeight: 4
+  MinHeight: -4
+  MapName: 
+  PlayerSpawnPrefab: {fileID: 1225526262958131633, guid: 1c1042b3b17d6a44b809f75394ac2872,
+    type: 3}
+  FlagSpawnPrefab: {fileID: 5322412074685807227, guid: a57ee4b2a75abc7478430e20c6b0eab9,
+    type: 3}
+  FlagZonePrefab: {fileID: 8545585876927409941, guid: e483ad8b9a5035f47b68509a1846c312,
+    type: 3}
