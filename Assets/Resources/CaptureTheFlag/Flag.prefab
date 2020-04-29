@@ -208,6 +208,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2cfc780609b0294cbd07c0d7c31f4f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IndicatorShowBorder: 20
+  IndicatorPositionBorder: 20
+  IndicatorTexture: {fileID: 10912, guid: 0000000000000000f000000000000000, type: 0}
+  IndicatorTint: {r: 1, g: 0, b: 0, a: 1}
 --- !u!95 &6616026487580550857
 Animator:
   serializedVersion: 3
