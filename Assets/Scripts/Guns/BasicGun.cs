@@ -234,7 +234,10 @@ public class BasicGun : GunBase {
 			float bulletBarValue = Mathf.Clamp((float)_numClipBullets / (float)ClipSize, 0, 1);
 			bulletBar.setBullet(bulletBarValue);
 		}
-
-		
 	}
+
+    public bool IsBulletClipFull()
+    {
+        return ClipSize == _numClipBullets;
+    }
 }

@@ -14,6 +14,9 @@ enum AnimStatus
 
 public class RobotMovement : MonoBehaviour
 {
+    public AudioSource ShootAudioSource;
+    public AudioSource ReloadAudioSource;
+
 	float speed = 4;
 	float rotSpeed = 80;
 	float gravity = 8;
@@ -43,51 +46,62 @@ public class RobotMovement : MonoBehaviour
         float angle = -AngleBetweenTwoPoints(positionOnScreen, mouseOnScreen) - 90f;
         transform.rotation = Quaternion.Euler(new Vector3(0f, angle, 0f));
 
-        if (Input.GetMouseButtonDown(0))
+        if (Input.anyKey || Input.anyKeyDown)
         {
-            if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) ||
-                Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.S))
+            if (Input.GetMouseButtonDown(0))
             {
-                animator.Play("MoveShoot", -1, 0f);
+                if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) ||
+                    Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.S))
+                {
+                    animator.Play("MoveShoot", -1, 0f);
+                }
+                else
+                {
+                    animator.Play("Shoot", -1, 0f);
+                }
+                ShootAudioSource.Play();
             }
-            else
+            else if (Input.GetKeyDown(KeyCode.Space))
             {
-                animator.Play("Shoot", -1, 0f);
+                animator.Play("Jump", -1, 0f);
+                animator.SetInteger("Status", (int)AnimStatus.JUMP);
             }
-        }
-        else if (Input.GetKeyDown(KeyCode.Space))
-        {
-            animator.Play("Jump", -1, 0f);
-        }
-        else if (Input.GetKeyDown(KeyCode.R))
-        {
-            animator.Play("Reload", -1, 0f);
-        }
-        else if (Input.GetMouseButton(0))
-        {
-            if(Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) ||
-                Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.S))
+            else if (Input.GetKeyDown(KeyCode.R))
             {
-                animator.SetInteger("Status", (int)AnimStatus.MOVE_SHOOT);
+                if (!transform.parent.GetComponentInChildren<BasicGun>().IsBulletClipFull())
+                {
+                    animator.Play("Reload", -1, 0f);
+                    animator.SetInteger("Status", (int)AnimStatus.RECHARGE);
+                    ReloadAudioSource.Play();
+                }
             }
-            else
+            else if (Input.GetMouseButton(0))
             {
-                animator.SetInteger("Status", (int)AnimStatus.SHOOT);
+                if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) ||
+                    Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.S))
+                {
+                    animator.SetInteger("Status", (int)AnimStatus.MOVE_SHOOT);
+                }
+                else
+                {
+                    animator.SetInteger("Status", (int)AnimStatus.SHOOT);
+                }
+                ShootAudioSource.Play();
             }
-        }
-        else if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.A) ||
-                Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.S))
-        {
-            animator.Play("Move", -1, 0f);
-        }
-        else if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) ||
-                Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.S))
-        {
-            //animator.Play("Move", -1, 0f);
-            animator.SetInteger("Status", (int)AnimStatus.MOVE);
+            else if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.A) ||
+                    Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.S))
+            {
+                animator.Play("Move", -1, 0f);
+            }
+            else if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) ||
+                    Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.S))
+            {
+                animator.SetInteger("Status", (int)AnimStatus.MOVE);
+            }
         }
         else
         {
+            animator.Play("Idle", -1, 0f);
             animator.SetInteger("Status", (int)AnimStatus.IDLE);
         }
     }
@@ -95,6 +109,13 @@ public class RobotMovement : MonoBehaviour
     float AngleBetweenTwoPoints(Vector3 a, Vector3 b)
     {
         return Mathf.Atan2(a.y - b.y, a.x - b.x) * Mathf.Rad2Deg;
+    }
+
+    // to know if Animator is playing any animation:
+    bool AnimatorIsPlaying()
+    {
+        return animator.GetCurrentAnimatorStateInfo(0).length >
+               animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
     }
 }
 
