@@ -14,15 +14,6 @@ enum AnimStatus
 
 public class RobotMovement : MonoBehaviour
 {
-    public AudioSource ShootAudioSource;
-    public AudioSource ReloadAudioSource;
-
-	float speed = 4;
-	float rotSpeed = 80;
-	float gravity = 8;
-
-	Vector3 moveDir = Vector3.zero;
-
 	CharacterController controller;
 	Animator animator;
 
@@ -59,7 +50,7 @@ public class RobotMovement : MonoBehaviour
                 {
                     animator.Play("Shoot", -1, 0f);
                 }
-                ShootAudioSource.Play();
+                //ShootAudioSource.Play();
             }
             else if (Input.GetKeyDown(KeyCode.Space))
             {
@@ -72,7 +63,7 @@ public class RobotMovement : MonoBehaviour
                 {
                     animator.Play("Reload", -1, 0f);
                     animator.SetInteger("Status", (int)AnimStatus.RECHARGE);
-                    ReloadAudioSource.Play();
+                    //ReloadAudioSource.Play();
                 }
             }
             else if (Input.GetMouseButton(0))
@@ -86,7 +77,7 @@ public class RobotMovement : MonoBehaviour
                 {
                     animator.SetInteger("Status", (int)AnimStatus.SHOOT);
                 }
-                ShootAudioSource.Play();
+                //ShootAudioSource.Play();
             }
             else if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.A) ||
                     Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.S))

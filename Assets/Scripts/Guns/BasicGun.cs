@@ -71,14 +71,22 @@ public class BasicGun : GunBase {
 	/// intersecting with the player himself.
 	/// </summary>
 	public float FireOffset = 1.0f;
-
-
-	// state variables
-	/// <summary>
-	/// The number of reserve bullets, i.e., bullets that are not in the clip. If this is negative, then the gun has
-	/// infinite ammo.
+    /// <summary>
+	/// The gun's shooting sound source
 	/// </summary>
-	public int NumReserveBullets = 200;
+    public AudioSource ShootAudioSource;
+    /// <summary>
+    /// The gun's reloading sound source
+    /// </summary>
+    public AudioSource ReloadAudioSource;
+
+
+    // state variables
+    /// <summary>
+    /// The number of reserve bullets, i.e., bullets that are not in the clip. If this is negative, then the gun has
+    /// infinite ammo.
+    /// </summary>
+    public int NumReserveBullets = 200;
 	private int _numClipBullets = 0;
 
 	private float _inaccuracy = 0.0f;
@@ -104,7 +112,14 @@ public class BasicGun : GunBase {
 	public Color bulletReloadingColor;
 
 
-	void Start() {
+    void Start() {
+        var temp = transform;
+        while (temp)
+        {
+            Debug.Log(temp);
+            temp = temp.parent;
+        }
+
 		Transform parent = transform.parent;
 		_network = parent.GetComponent<PhotonView>();
 		if (!_network.IsMine) {
@@ -172,7 +187,9 @@ public class BasicGun : GunBase {
 		// TODO if the players are not happy with this non-WYSIWYG velocity, compensate for player velocity
 		bullet.Velocity = direction * BulletSpeed + _parentVelocity.velocity;
 		bullet.Damage = BulletDamage;
-	}
+        // play shooting sound
+        ShootAudioSource.Play();
+    }
 
 	public override void Reload() {
 		// cannot reload while reloading
@@ -180,7 +197,9 @@ public class BasicGun : GunBase {
 		if (!IsReloading && NumReserveBullets != 0 && _numClipBullets != ClipSize) {
 			_reloadCooldown = ReloadTime;
 		}
-	}
+        // play reloading sound
+        ReloadAudioSource.Play();
+    }
 	public override void UpdateGun(Vector3 aim, float deltaTime) {
 		Vector3 position = transform.position;
 		if (AimIndicator) {
