@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1222112976251235307}
   - component: {fileID: 1472626863867819728}
   m_Layer: 5
-  m_Name: HealthBarBorder
+  m_Name: BulletBarBorder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -85,7 +85,7 @@ GameObject:
   - component: {fileID: 6368377926908320498}
   - component: {fileID: 1034059397200724940}
   m_Layer: 5
-  m_Name: Health
+  m_Name: Bullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
