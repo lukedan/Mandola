@@ -117,6 +117,7 @@ public class InGameCommon : MonoBehaviourPunCallbacks {
 			Delta = delta
 		});
 	}
+
 	[PunRPC]
 	void RPC_AlterTerrainWall(Vector2 v, Vector2 dir, float len, float delta) {
 		TerrainSpawner.TryPerformTerrainModification(new PrismSpawner.TerrainModification {
