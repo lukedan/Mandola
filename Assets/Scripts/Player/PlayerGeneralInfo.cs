@@ -19,6 +19,10 @@ public class PlayerGeneralInfo : MonoBehaviour, IPunInstantiateMagicCallback {
 	/// </summary>
 	public float HealthRegen = 0.1f;
 	/// <summary>
+	/// Health regeneration delay.
+	/// </summary>
+	public float HealthRegenDelay = 5.0f;
+	/// <summary>
 	/// A parameter of the damage effect.
 	/// </summary>
 	public float DamageEffectExaggeration = 0.3f;
@@ -45,46 +49,50 @@ public class PlayerGeneralInfo : MonoBehaviour, IPunInstantiateMagicCallback {
 	/// </summary>
 	public int Team = 0;
 
+	private float _healthRegenCd = 0.0f;
+
 	private ChromaticAberration _damageEffect;
 
 	private PhotonView _network;
 
 	public HealthBar healthBarPrefab;
 
-	private HealthBar healthBar;
+	private HealthBar _healthBar;
 
 
-	private void Start()
-	{
+	private void Start() {
 		_network = GetComponent<PhotonView>();
 		InGameCommon.CurrentGame.GlobalPostProcessing.profile.TryGetSettings(out _damageEffect);
 		InGameCommon.CurrentGame.PlayerAvatars[_network.CreatorActorNr] = gameObject;
-		CreateHealthBar();
-	}
-
-	private void CreateHealthBar()
-	{
-		if (_network.IsMine)
-		{
-			Vector2 screenResolution = new Vector2(Screen.width, Screen.height);
-			healthBar = Instantiate<HealthBar>(healthBarPrefab);
-			healthBar.transform.SetParent(FindObjectOfType<Canvas>().transform);
-			healthBar.transform.position += new Vector3(screenResolution.x, screenResolution.y, 0);
-			healthBar.setHealth(Health);
+		if (_network.IsMine) {
+			CreateHealthBar();
 		}
 	}
 
+	private void CreateHealthBar() {
+		Vector2 screenResolution = new Vector2(Screen.width, Screen.height);
+		_healthBar = Instantiate<HealthBar>(healthBarPrefab);
+		_healthBar.transform.SetParent(FindObjectOfType<Canvas>().transform);
+		_healthBar.transform.position += new Vector3(screenResolution.x, screenResolution.y, 0);
+		_healthBar.setHealth(Health);
+	}
+
 	private void Update() {
-		Health = Mathf.Min(1.0f, Health + HealthRegen * Time.deltaTime);
+		// health regen
+		_healthRegenCd -= Time.deltaTime;
+		if (_healthRegenCd < 0.0f) {
+			Health = Mathf.Min(1.0f, Health + HealthRegen * Time.deltaTime);
+		}
+
+		// update damage effect
 		float effectTarget = (1.0f - Health) * DamageEffectAtMinimumHealth;
 		_damageEffect.intensity.Override(Mathf.Max(
 			effectTarget, _damageEffect.intensity.value - Time.deltaTime * DamageEffectRecovery
 		));
 
 		// Update health bar
-		if (_network.IsMine)
-		{
-			healthBar.setHealth(Health);
+		if (_healthBar) {
+			_healthBar.setHealth(Health);
 		}
 	}
 
@@ -100,6 +108,7 @@ public class PlayerGeneralInfo : MonoBehaviour, IPunInstantiateMagicCallback {
 	[PunRPC]
 	public void RPC_OnHit(float damage) {
 		Debug.Assert(_network.IsMine);
+		_healthRegenCd = HealthRegenDelay;
 		Health -= damage;
 		_damageEffect.intensity.Override(Mathf.Min(
 			_damageEffect.intensity.value + DamageEffectExaggeration, DamageEffectClamp
