@@ -1,4 +1,4 @@
-﻿using Photon.Pun;
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -124,7 +124,8 @@ public class Bullet : MonoBehaviour, IPunObservable, IPunInstantiateMagicCallbac
 	public void SetColor(Color color, float intensity) {
 		Light.color = color;
 		Light.intensity = intensity;
-		MeshRenderer.material.SetColor("_EmissionColor", color);
+		float intensityPow = Mathf.Pow(2.0f, intensity);
+		MeshRenderer.material.SetColor("_EmissionColor", (Vector4)color * intensityPow);
 	}
 
 	void IPunObservable.OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {

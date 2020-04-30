@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BasicGun : GunBase {
 	// config variables
@@ -98,6 +99,10 @@ public class BasicGun : GunBase {
 
 	private BulletBar bulletBar;
 
+	public Color bulletBarColor;
+
+	public Color bulletReloadingColor;
+
 
 	void Start() {
 		Transform parent = transform.parent;
@@ -117,10 +122,12 @@ public class BasicGun : GunBase {
 		if (_network.IsMine)
 		{
 			Vector2 screenResolution = new Vector2(Screen.width, Screen.height);
-			bulletBar = Instantiate<BulletBar>(bulletBarPrefab);
+			bulletBar = Instantiate(bulletBarPrefab);
 			bulletBar.transform.SetParent(FindObjectOfType<Canvas>().transform);
 			bulletBar.transform.position += new Vector3(screenResolution.x, screenResolution.y, 0);
-			bulletBar.setBullet((float)_numClipBullets / (float)ClipSize);
+
+			bulletBar.setBullet(_numClipBullets / (float)ClipSize);
+			bulletBar.transform.Find("Bullet").GetComponent<Image>().color = bulletBarColor;
 		}
 	}
 
@@ -189,10 +196,18 @@ public class BasicGun : GunBase {
 
 		if (IsReloading) {
 			_reloadCooldown -= deltaTime;
+
+			//Update bullet bar when reloading
+			float bulletBarValue = Mathf.Clamp(1 - _reloadCooldown, 0, 1);
+			
+			bulletBar.transform.Find("Bullet").GetComponent<Image>().color = bulletReloadingColor;
+			bulletBar.setBullet(bulletBarValue);
+
 			if (!IsReloading) {
 				_instantReload();
 				_fireCooldown = 0.0f;
 				_inaccuracy = 0.0f;
+				bulletBar.transform.Find("Bullet").GetComponent<Image>().color = bulletBarColor;
 			}
 		} else { // try to fire
 			_fireCooldown -= deltaTime;
@@ -214,8 +229,12 @@ public class BasicGun : GunBase {
 				_fireCooldown = Mathf.Max(_fireCooldown, 0.0f);
 				_freshTrigger = true;
 			}
+
+			//Update bullet bar when firing
+			float bulletBarValue = Mathf.Clamp((float)_numClipBullets / (float)ClipSize, 0, 1);
+			bulletBar.setBullet(bulletBarValue);
 		}
 
-		bulletBar.setBullet((float)_numClipBullets / (float)ClipSize);
+		
 	}
 }
