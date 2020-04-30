@@ -1359,7 +1359,7 @@ MonoBehaviour:
   mySelectedCharacter: 0
   allCharacters:
   - {fileID: 538313300804161657, guid: 31afdcbc18d8f744f932b58e676046c2, type: 3}
-  - {fileID: 5347505519682252453, guid: 100c3a80ea1f5b84eb0ca3778733cfa9, type: 3}
+  - {fileID: 538313300804161657, guid: 31afdcbc18d8f744f932b58e676046c2, type: 3}
 --- !u!4 &907825471
 Transform:
   m_ObjectHideFlags: 0
