@@ -49,7 +49,7 @@ MonoBehaviour:
   FiringDelay: 0.05
   ReloadTime: 1.5
   AccuracyDistance: 10
-  ShootInaccuracy: 0.1
+  ShootInaccuracy: 1
   MaximumInaccuracy: 1
   AccuracyRestore: 0.7
   BulletColor: {r: 1, g: 0.49803922, b: 0, a: 1}
@@ -62,7 +62,7 @@ MonoBehaviour:
   FireOffset: 1
   NumReserveBullets: -1
   AimIndicator: {fileID: 1669974915168516615}
-  bulletBarPrefab: {fileID: -7156405144664765674, guid: f106d95fe46c8b442abfabdf939114fe,
+  bulletBarPrefab: {fileID: 3404214674349633901, guid: f106d95fe46c8b442abfabdf939114fe,
     type: 3}
   bulletBarColor: {r: 1, g: 0.49803922, b: 0, a: 1}
   bulletReloadingColor: {r: 0.4339623, g: 0.33763036, b: 0.24359204, a: 1}

@@ -32,6 +32,10 @@ public class TerrainAlteration : MonoBehaviour {
 	private PlayerGeneralInfo _playerInfo;
 	private PhotonView _gameNetwork;
 
+	public AbilityBar abilityBarPrefab;
+
+	private AbilityBar abilityBar;
+
 	private void Start() {
 		_playerInfo = GetComponent<PlayerGeneralInfo>();
 		if (!GetComponent<PhotonView>().IsMine) {
@@ -41,6 +45,19 @@ public class TerrainAlteration : MonoBehaviour {
 		_gameNetwork = InGameCommon.CurrentGame.GetComponent<PhotonView>();
 
 		_cooldownValue = Cooldown;
+
+		CreateAbilityBar();
+	}
+
+	private void CreateAbilityBar()
+	{
+		Vector2 screenResolution = new Vector2(Screen.width, Screen.height);
+		abilityBar = Instantiate(abilityBarPrefab);
+
+		abilityBar.transform.SetParent(FindObjectOfType<Canvas>().transform);
+		abilityBar.transform.position += new Vector3(screenResolution.x, screenResolution.y, 0);
+		abilityBar.setAbilityCooldown(1 - _cooldownValue / Cooldown);
+		//abilityBar.transform.Find("Bullet").GetComponent<Image>().color = bulletBarColor;
 	}
 
 	private void Update() {
@@ -111,5 +128,6 @@ public class TerrainAlteration : MonoBehaviour {
 		}
 		// cools down no matter paused or not
 		_cooldownValue = Mathf.Max(_cooldownValue, 0.0f) - Time.deltaTime;
+		abilityBar.setAbilityCooldown(1 - _cooldownValue / Cooldown);
 	}
 }

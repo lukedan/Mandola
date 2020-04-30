@@ -121,7 +121,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Health: 1
-  HealthRegen: 0
+  HealthRegen: 0.1
   DamageEffectExaggeration: 0.5
   DamageEffectRecovery: 2
   DamageEffectAtMinimumHealth: 1
@@ -154,6 +154,8 @@ MonoBehaviour:
     type: 2}
   PreviewVerticalOffset: 0.1
   Cooldown: 5
+  abilityBarPrefab: {fileID: 8110677898298169288, guid: 3352e6b0483e7c7479c100e7d348fa55,
+    type: 3}
 --- !u!1001 &7804407771847318928
 PrefabInstance:
   m_ObjectHideFlags: 0
