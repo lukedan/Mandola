@@ -43,38 +43,48 @@ public class RobotMovement : MonoBehaviour
         float angle = -AngleBetweenTwoPoints(positionOnScreen, mouseOnScreen) - 90f;
         transform.rotation = Quaternion.Euler(new Vector3(0f, angle, 0f));
 
-        if (Input.anyKey)
+        if (Input.GetMouseButtonDown(0))
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) ||
+                Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.S))
             {
-                animator.SetInteger("Status", (int)AnimStatus.SHOOT);
+                animator.Play("MoveShoot", -1, 0f);
             }
             else
             {
-                if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) ||
-                    Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.S))
-                {
-                    if (Input.GetMouseButton(0))
-                    {
-                        animator.SetInteger("Status", (int)AnimStatus.MOVE_SHOOT);
-                    }
-                    else
-                    {
-                        animator.SetInteger("Status", (int)AnimStatus.MOVE);
-                    }
-                }
-                
-                else if (Input.GetKey(KeyCode.Space))
-                {
-                    animator.SetInteger("Status", (int)AnimStatus.JUMP);
-                }
-
+                animator.Play("Shoot", -1, 0f);
             }
-
-            if (Input.GetKey(KeyCode.R))
+        }
+        else if (Input.GetKeyDown(KeyCode.Space))
+        {
+            animator.Play("Jump", -1, 0f);
+        }
+        else if (Input.GetKeyDown(KeyCode.R))
+        {
+            animator.Play("Reload", -1, 0f);
+        }
+        else if (Input.GetMouseButton(0))
+        {
+            if(Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) ||
+                Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.S))
             {
-                animator.SetInteger("Status", (int)AnimStatus.RECHARGE);
+                animator.SetInteger("Status", (int)AnimStatus.MOVE_SHOOT);
             }
+            else
+            {
+                animator.SetInteger("Status", (int)AnimStatus.SHOOT);
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.A) ||
+                Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.S))
+        {
+            animator.Play("Move", -1, 0f);
+        }
+        else if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) ||
+                Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.S))
+        {
+            //animator.Play("Move", -1, 0f);
+            animator.SetInteger("Status", (int)AnimStatus.MOVE);
         }
         else
         {
