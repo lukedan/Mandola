@@ -5,10 +5,7 @@ using UnityEngine;
 enum AnimStatus
 {
     IDLE,
-    MOVE_FORWARD,
-    MOVE_LEFT,
-    MOVE_RIGHT,
-    MOVE_BACK,
+    MOVE,
     MOVE_SHOOT,
     JUMP,
     SHOOT,
@@ -54,7 +51,8 @@ public class RobotMovement : MonoBehaviour
             }
             else
             {
-                if (Input.GetKey(KeyCode.W))
+                if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) ||
+                    Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.S))
                 {
                     if (Input.GetMouseButton(0))
                     {
@@ -62,53 +60,16 @@ public class RobotMovement : MonoBehaviour
                     }
                     else
                     {
-                        animator.SetInteger("Status", (int)AnimStatus.MOVE_FORWARD);
+                        animator.SetInteger("Status", (int)AnimStatus.MOVE);
                     }
                 }
-                else if (Input.GetKey(KeyCode.A))
-                {
-                    if (Input.GetMouseButton(0))
-                    {
-                        animator.SetInteger("Status", (int)AnimStatus.MOVE_SHOOT);
-                    }
-                    else
-                    {
-                        animator.SetInteger("Status", (int)AnimStatus.MOVE_LEFT);
-                    }
-                }
-                else if (Input.GetKey(KeyCode.D))
-                {
-                    if (Input.GetMouseButton(0))
-                    {
-                        animator.SetInteger("Status", (int)AnimStatus.MOVE_SHOOT);
-                    }
-                    else
-                    {
-                        animator.SetInteger("Status", (int)AnimStatus.MOVE_RIGHT);
-                    }
-                }
-                else if (Input.GetKey(KeyCode.S))
-                {
-                    if (Input.GetMouseButton(0))
-                    {
-                        animator.SetInteger("Status", (int)AnimStatus.MOVE_SHOOT);
-                    }
-                    else
-                    {
-                        animator.SetInteger("Status", (int)AnimStatus.MOVE_BACK);
-                    }
-                }
-                else if (Input.GetKey(KeyCode.A))
-                {
-                    animator.SetInteger("Status", (int)AnimStatus.MOVE_LEFT);
-                }
+                
                 else if (Input.GetKey(KeyCode.Space))
                 {
                     animator.SetInteger("Status", (int)AnimStatus.JUMP);
                 }
 
             }
-
 
             if (Input.GetKey(KeyCode.R))
             {
@@ -119,10 +80,6 @@ public class RobotMovement : MonoBehaviour
         {
             animator.SetInteger("Status", (int)AnimStatus.IDLE);
         }
-
-
-
-
     }
 
     float AngleBetweenTwoPoints(Vector3 a, Vector3 b)
