@@ -46,55 +46,83 @@ public class RobotMovement : MonoBehaviour
         float angle = -AngleBetweenTwoPoints(positionOnScreen, mouseOnScreen) - 90f;
         transform.rotation = Quaternion.Euler(new Vector3(0f, angle, 0f));
 
-        if (Input.GetKey(KeyCode.W))
+        if (Input.anyKey)
         {
-            if (Input.GetMouseButton(0))
-            {
-                animator.SetInteger("Status", (int)AnimStatus.MOVE_SHOOT);
-            }
-            else
-            {
-                Debug.Log("Move forward");
-                animator.SetInteger("Status", (int)AnimStatus.MOVE_FORWARD);
-            }
-        }
-        else if (Input.GetKey(KeyCode.A))
-        {
-            animator.SetInteger("Status", (int)AnimStatus.MOVE_LEFT);
-        }
-        else if (Input.GetKey(KeyCode.D))
-        {
-            animator.SetInteger("Status", (int)AnimStatus.MOVE_RIGHT);
-        }
-        else if (Input.GetKey(KeyCode.S))
-        {
-            animator.SetInteger("Status", (int)AnimStatus.MOVE_BACK);
-        }
-        else if (Input.GetKey(KeyCode.A))
-        {
-            animator.SetInteger("Status", (int)AnimStatus.MOVE_LEFT);
-        }
-        else if (Input.GetKey(KeyCode.Space))
-        {
-            animator.SetInteger("Status", (int)AnimStatus.JUMP);
-        }
-        else
-        {
-            if (Input.GetMouseButton(0))
+            if (Input.GetMouseButtonDown(0))
             {
                 animator.SetInteger("Status", (int)AnimStatus.SHOOT);
             }
             else
             {
-                animator.SetInteger("Status", (int)AnimStatus.IDLE);
+                if (Input.GetKey(KeyCode.W))
+                {
+                    if (Input.GetMouseButton(0))
+                    {
+                        animator.SetInteger("Status", (int)AnimStatus.MOVE_SHOOT);
+                    }
+                    else
+                    {
+                        animator.SetInteger("Status", (int)AnimStatus.MOVE_FORWARD);
+                    }
+                }
+                else if (Input.GetKey(KeyCode.A))
+                {
+                    if (Input.GetMouseButton(0))
+                    {
+                        animator.SetInteger("Status", (int)AnimStatus.MOVE_SHOOT);
+                    }
+                    else
+                    {
+                        animator.SetInteger("Status", (int)AnimStatus.MOVE_LEFT);
+                    }
+                }
+                else if (Input.GetKey(KeyCode.D))
+                {
+                    if (Input.GetMouseButton(0))
+                    {
+                        animator.SetInteger("Status", (int)AnimStatus.MOVE_SHOOT);
+                    }
+                    else
+                    {
+                        animator.SetInteger("Status", (int)AnimStatus.MOVE_RIGHT);
+                    }
+                }
+                else if (Input.GetKey(KeyCode.S))
+                {
+                    if (Input.GetMouseButton(0))
+                    {
+                        animator.SetInteger("Status", (int)AnimStatus.MOVE_SHOOT);
+                    }
+                    else
+                    {
+                        animator.SetInteger("Status", (int)AnimStatus.MOVE_BACK);
+                    }
+                }
+                else if (Input.GetKey(KeyCode.A))
+                {
+                    animator.SetInteger("Status", (int)AnimStatus.MOVE_LEFT);
+                }
+                else if (Input.GetKey(KeyCode.Space))
+                {
+                    animator.SetInteger("Status", (int)AnimStatus.JUMP);
+                }
+
+            }
+
+
+            if (Input.GetKey(KeyCode.R))
+            {
+                animator.SetInteger("Status", (int)AnimStatus.RECHARGE);
             }
         }
-
-        if (Input.GetKey(KeyCode.R))
+        else
         {
-            animator.SetInteger("Status", (int)AnimStatus.RECHARGE);
+            animator.SetInteger("Status", (int)AnimStatus.IDLE);
         }
-        
+
+
+
+
     }
 
     float AngleBetweenTwoPoints(Vector3 a, Vector3 b)
