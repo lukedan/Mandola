@@ -122,6 +122,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Health: 1
   HealthRegen: 0.1
+  HealthRegenDelay: 5
   DamageEffectExaggeration: 0.5
   DamageEffectRecovery: 2
   DamageEffectAtMinimumHealth: 1

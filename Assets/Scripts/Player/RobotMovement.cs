@@ -2,111 +2,42 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-enum AnimStatus
-{
-    IDLE,
-    MOVE,
-    MOVE_SHOOT,
-    JUMP,
-    SHOOT,
-    RECHARGE
+enum AnimStatus {
+	IDLE,
+	MOVE,
+	MOVE_SHOOT,
+	JUMP,
+	SHOOT,
+	RECHARGE
 };
 
-public class RobotMovement : MonoBehaviour
-{
-	CharacterController controller;
-	Animator animator;
+public class RobotMovement : MonoBehaviour {
+	private Animator _animator;
+	private GunBase _aim;
+	private CharacterController _move;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        controller = GetComponent<CharacterController>();
-        animator = GetComponent<Animator>();
-    }
+	private void Start() {
+		_animator = GetComponent<Animator>();
 
-    // Update is called once per frame
-    void Update()
-    {
-        // Get the Screen positions of the object
-        Vector2 positionOnScreen = Camera.main.WorldToViewportPoint(transform.position);
+		Transform parent = transform.parent;
+		_aim = parent.GetComponentInChildren<GunBase>();
+		_move = parent.GetComponent<CharacterController>();
+	}
 
-        // Get the Screen position of the mouse
-        Vector2 mouseOnScreen = (Vector2)Camera.main.ScreenToViewportPoint(Input.mousePosition);
+	// Update is called once per frame
+	void Update() {
+		Vector3 aimDir = _aim.Aim - transform.parent.position;
+		Vector3 vel = _move.velocity;
+		Vector2 aimDirXZ = new Vector2(aimDir.x, aimDir.z).normalized;
+		Vector2 velXZ = new Vector2(vel.x, vel.z);
+		float forward = Vector2.Dot(aimDirXZ, velXZ);
+		float strafe = Vector2.Dot(new Vector2(aimDirXZ.y, -aimDirXZ.x), velXZ);
+		_animator.SetFloat("Forward", forward);
+		_animator.SetFloat("Strafe", strafe);
+		_animator.SetBool("Grounded", _move.isGrounded);
+		_animator.SetBool("Reloading", _aim.IsReloading);
 
-        // Get the angle between the points
-        float angle = -AngleBetweenTwoPoints(positionOnScreen, mouseOnScreen) - 90f;
-        transform.rotation = Quaternion.Euler(new Vector3(0f, angle, 0f));
-
-        if (Input.anyKey || Input.anyKeyDown)
-        {
-            if (Input.GetMouseButtonDown(0))
-            {
-                if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) ||
-                    Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.S))
-                {
-                    animator.Play("MoveShoot", -1, 0f);
-                }
-                else
-                {
-                    animator.Play("Shoot", -1, 0f);
-                }
-                //ShootAudioSource.Play();
-            }
-            else if (Input.GetKeyDown(KeyCode.Space))
-            {
-                animator.Play("Jump", -1, 0f);
-                animator.SetInteger("Status", (int)AnimStatus.JUMP);
-            }
-            else if (Input.GetKeyDown(KeyCode.R))
-            {
-                if (!transform.parent.GetComponentInChildren<BasicGun>().IsBulletClipFull())
-                {
-                    animator.Play("Reload", -1, 0f);
-                    animator.SetInteger("Status", (int)AnimStatus.RECHARGE);
-                    //ReloadAudioSource.Play();
-                }
-            }
-            else if (Input.GetMouseButton(0))
-            {
-                if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) ||
-                    Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.S))
-                {
-                    animator.SetInteger("Status", (int)AnimStatus.MOVE_SHOOT);
-                }
-                else
-                {
-                    animator.SetInteger("Status", (int)AnimStatus.SHOOT);
-                }
-                //ShootAudioSource.Play();
-            }
-            else if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.A) ||
-                    Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.S))
-            {
-                animator.Play("Move", -1, 0f);
-            }
-            else if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) ||
-                    Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.S))
-            {
-                animator.SetInteger("Status", (int)AnimStatus.MOVE);
-            }
-        }
-        else
-        {
-            animator.Play("Idle", -1, 0f);
-            animator.SetInteger("Status", (int)AnimStatus.IDLE);
-        }
-    }
-
-    float AngleBetweenTwoPoints(Vector3 a, Vector3 b)
-    {
-        return Mathf.Atan2(a.y - b.y, a.x - b.x) * Mathf.Rad2Deg;
-    }
-
-    // to know if Animator is playing any animation:
-    bool AnimatorIsPlaying()
-    {
-        return animator.GetCurrentAnimatorStateInfo(0).length >
-               animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
-    }
+		transform.localRotation = Quaternion.FromToRotation(new Vector3(0.0f, 0.0f, 1.0f), new Vector3(aimDirXZ.x, 0.0f, aimDirXZ.y));
+	}
 }
 

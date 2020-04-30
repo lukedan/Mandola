@@ -71,24 +71,24 @@ public class BasicGun : GunBase {
 	/// intersecting with the player himself.
 	/// </summary>
 	public float FireOffset = 1.0f;
-    /// <summary>
+	/// <summary>
 	/// The gun's shooting sound source
 	/// </summary>
-    public AudioSource[] ShootAudioSources = new AudioSource[5];
-    /// <summary>
-    /// The gun's reloading sound source
-    /// </summary>
-    public AudioSource ReloadAudioSource;
+	public AudioSource[] ShootAudioSources = new AudioSource[5];
+	/// <summary>
+	/// The gun's reloading sound source
+	/// </summary>
+	public AudioSource ReloadAudioSource;
 
 
-    // state variables
-    /// <summary>
-    /// The number of reserve bullets, i.e., bullets that are not in the clip. If this is negative, then the gun has
-    /// infinite ammo.
-    /// </summary>
-    public int NumReserveBullets = 200;
+	// state variables
+	/// <summary>
+	/// The number of reserve bullets, i.e., bullets that are not in the clip. If this is negative, then the gun has
+	/// infinite ammo.
+	/// </summary>
+	public int NumReserveBullets = 200;
 	private int _numClipBullets = 0;
-    private int _shootAudioSrcIdx = 0;
+	private int _shootAudioSrcIdx = 0;
 
 	private float _inaccuracy = 0.0f;
 
@@ -113,13 +113,12 @@ public class BasicGun : GunBase {
 	public Color bulletReloadingColor;
 
 
-    void Start() {
-        var temp = transform;
-        while (temp)
-        {
-            Debug.Log(temp);
-            temp = temp.parent;
-        }
+	void Start() {
+		var temp = transform;
+		while (temp) {
+			Debug.Log(temp);
+			temp = temp.parent;
+		}
 
 		Transform parent = transform.parent;
 		_network = parent.GetComponent<PhotonView>();
@@ -133,10 +132,8 @@ public class BasicGun : GunBase {
 		CreateBulletBar();
 	}
 
-	private void CreateBulletBar()
-	{
-		if (_network.IsMine)
-		{
+	private void CreateBulletBar() {
+		if (_network.IsMine) {
 			Vector2 screenResolution = new Vector2(Screen.width, Screen.height);
 			bulletBar = Instantiate(bulletBarPrefab);
 			bulletBar.transform.SetParent(FindObjectOfType<Canvas>().transform);
@@ -159,7 +156,9 @@ public class BasicGun : GunBase {
 		}
 	}
 
-	public bool IsReloading => _reloadCooldown > 0.0f;
+	public override bool GetIsReloading() {
+		return _reloadCooldown > 0.0f;
+	}
 	public bool CanFire => _numClipBullets > 0 && _fireCooldown <= 0.0f && !(SemiAuto && !_freshTrigger);
 
 	/// <summary>
@@ -188,13 +187,12 @@ public class BasicGun : GunBase {
 		// TODO if the players are not happy with this non-WYSIWYG velocity, compensate for player velocity
 		bullet.Velocity = direction * BulletSpeed + _parentVelocity.velocity;
 		bullet.Damage = BulletDamage;
-        // play shooting sound
-        ShootAudioSources[_shootAudioSrcIdx++].Play();
-        if (_shootAudioSrcIdx == 5)
-        {
-            _shootAudioSrcIdx = 0;
-        }
-    }
+		// play shooting sound
+		ShootAudioSources[_shootAudioSrcIdx++].Play();
+		if (_shootAudioSrcIdx == 5) {
+			_shootAudioSrcIdx = 0;
+		}
+	}
 
 	public override void Reload() {
 		// cannot reload while reloading
@@ -202,20 +200,20 @@ public class BasicGun : GunBase {
 		if (!IsReloading && NumReserveBullets != 0 && _numClipBullets != ClipSize) {
 			_reloadCooldown = ReloadTime;
 		}
-        // play reloading sound
-        ReloadAudioSource.Play();
-    }
-	public override void UpdateGun(Vector3 aim, float deltaTime) {
+		// play reloading sound
+		ReloadAudioSource.Play();
+	}
+	public override void UpdateGun(float deltaTime) {
 		Vector3 position = transform.position;
 		if (AimIndicator) {
-			Vector3 diff = aim - position;
+			Vector3 diff = Aim - position;
 			float length = diff.magnitude;
 			diff /= length;
 			length = Mathf.Min(2.0f, 0.5f * length);
 			AimIndicator.SetPosition(0, position);
 			AimIndicator.SetPosition(1, position + length * diff);
-			AimIndicator.SetPosition(2, aim - length * diff);
-			AimIndicator.SetPosition(3, aim);
+			AimIndicator.SetPosition(2, Aim - length * diff);
+			AimIndicator.SetPosition(3, Aim);
 		}
 
 		if (IsReloading) {
@@ -223,7 +221,7 @@ public class BasicGun : GunBase {
 
 			//Update bullet bar when reloading
 			float bulletBarValue = Mathf.Clamp(1 - _reloadCooldown, 0, 1);
-			
+
 			bulletBar.transform.Find("Bullet").GetComponent<Image>().color = bulletReloadingColor;
 			bulletBar.setBullet(bulletBarValue);
 
@@ -242,7 +240,7 @@ public class BasicGun : GunBase {
 				while (CanFire) {
 					_fireCooldown += FiringDelay;
 					_freshTrigger = false;
-					_Fire(aim); // fire bullet
+					_Fire(Aim); // fire bullet
 					_inaccuracy = Mathf.Min(MaximumInaccuracy, _inaccuracy + ShootInaccuracy);
 					--_numClipBullets;
 				}
@@ -260,8 +258,7 @@ public class BasicGun : GunBase {
 		}
 	}
 
-    public bool IsBulletClipFull()
-    {
-        return ClipSize == _numClipBullets;
-    }
+	public bool IsBulletClipFull() {
+		return ClipSize == _numClipBullets;
+	}
 }
