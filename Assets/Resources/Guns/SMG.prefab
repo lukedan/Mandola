@@ -28,7 +28,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 4745722817049177731}
+  - {fileID: 520422217868985856}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -53,7 +53,7 @@ MonoBehaviour:
   MaximumInaccuracy: 1
   AccuracyRestore: 0.7
   BulletColor: {r: 1, g: 0.49803922, b: 0, a: 1}
-  BulletColorIntensity: 1
+  BulletColorIntensity: 2
   BulletDamage: 0.2
   MaxBulletBounces: 5
   BulletPrefab: {fileID: 8013300514214558543, guid: 8e8b65732032bb545a48f635ea492b59,
@@ -61,7 +61,7 @@ MonoBehaviour:
   BulletSpeed: 50
   FireOffset: 1
   NumReserveBullets: -1
-  AimIndicator: {fileID: 4745722817049178088}
+  AimIndicator: {fileID: 1669974915168516615}
   bulletBarPrefab: {fileID: -7156405144664765674, guid: f106d95fe46c8b442abfabdf939114fe,
     type: 3}
 --- !u!1001 &4745722817049177341
@@ -133,13 +133,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bf1e21dd615f04b4596c3c400091d4fe, type: 3}
---- !u!4 &4745722817049177731 stripped
+--- !u!4 &520422217868985856 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5108446462474447613, guid: bf1e21dd615f04b4596c3c400091d4fe,
     type: 3}
   m_PrefabInstance: {fileID: 4745722817049177341}
   m_PrefabAsset: {fileID: 0}
---- !u!120 &4745722817049178088 stripped
+--- !u!120 &1669974915168516615 stripped
 LineRenderer:
   m_CorrespondingSourceObject: {fileID: 6264718825619461882, guid: bf1e21dd615f04b4596c3c400091d4fe,
     type: 3}

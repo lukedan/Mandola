@@ -46,6 +46,9 @@ public class PrismSpawner : MonoBehaviour {
 	/// </summary>
 	public float MinHeight = -4.0f;
 
+	public Color MaxHeightColor = new Color(1.0f, 0.0f, 0.0f);
+	public Color MinHeightColor = new Color(0.0f, 1.0f, 0.0f);
+
 	/// <summary>
 	/// The name of the map.
 	/// </summary>
@@ -203,6 +206,8 @@ public class PrismSpawner : MonoBehaviour {
 				PrismMover mover = prism.GetComponent<PrismMover>();
 				mover.MaxHeight = MaxHeight;
 				mover.MinHeight = MinHeight;
+				mover.MinHeightCapColor = MinHeightColor;
+				mover.MaxHeightCapColor = MaxHeightColor;
 				mover.ChangeHeightImmediate(heights[z][x]);
 
 				innerFlip = !innerFlip;

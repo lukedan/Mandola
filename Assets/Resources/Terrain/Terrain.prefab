@@ -50,6 +50,8 @@ MonoBehaviour:
   NumPrismsZ: 50
   MaxHeight: 4
   MinHeight: -4
+  MaxHeightColor: {r: 0.8, g: 0.79, b: 0, a: 1}
+  MinHeightColor: {r: 0, g: 0, b: 0.5, a: 1}
   MapName: 
   PlayerSpawnPrefab: {fileID: 1225526262958131633, guid: 1c1042b3b17d6a44b809f75394ac2872,
     type: 3}
