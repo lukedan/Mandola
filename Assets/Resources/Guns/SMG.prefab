@@ -53,7 +53,7 @@ MonoBehaviour:
   MaximumInaccuracy: 1
   AccuracyRestore: 0.7
   BulletColor: {r: 1, g: 0.49803922, b: 0, a: 1}
-  BulletColorIntensity: 1
+  BulletColorIntensity: 2
   BulletDamage: 0.2
   MaxBulletBounces: 5
   BulletPrefab: {fileID: 8013300514214558543, guid: 8e8b65732032bb545a48f635ea492b59,

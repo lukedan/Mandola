@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PrismMover : MonoBehaviour {
 	/// <summary>
@@ -42,6 +43,21 @@ public class PrismMover : MonoBehaviour {
 	/// </summary>
 	private LevelChange _changingLevel = LevelChange.NotChanging;
 
+	public Color MaxHeightCapColor {
+		get => Color.HSVToRGB(_maxHeightCapColorHSV.x, _maxHeightCapColorHSV.y, _maxHeightCapColorHSV.z);
+		set {
+			Color.RGBToHSV(value, out _maxHeightCapColorHSV.x, out _maxHeightCapColorHSV.y, out _maxHeightCapColorHSV.z);
+		}
+	}
+	private Vector3 _maxHeightCapColorHSV;
+	public Color MinHeightCapColor {
+		get => Color.HSVToRGB(_minHeightCapColorHSV.x, _minHeightCapColorHSV.y, _minHeightCapColorHSV.z);
+		set {
+			Color.RGBToHSV(value, out _minHeightCapColorHSV.x, out _minHeightCapColorHSV.y, out _minHeightCapColorHSV.z);
+		}
+	}
+	private Vector3 _minHeightCapColorHSV;
+
 	/// <summary>
 	/// Target vertical velocity of this prism.
 	/// </summary>
@@ -58,6 +74,19 @@ public class PrismMover : MonoBehaviour {
 		}
 	}
 
+	private void _UpdateCapEmission(float pos) {
+		float t = (pos - MinHeight) / (MaxHeight - MinHeight);
+		Vector3 hsv = (1.0f - t) * _minHeightCapColorHSV + t * _maxHeightCapColorHSV;
+		if (Mathf.Abs(_minHeightCapColorHSV.x - _maxHeightCapColorHSV.x) > 0.5f) {
+			hsv.x = hsv.x > 0.5f ? hsv.x - 0.5f : hsv.x + 0.5f;
+		}
+		GetComponent<MeshRenderer>().material.SetColor("_CapEmission", Color.HSVToRGB(hsv.x, hsv.y, hsv.z));
+	}
+
+	private void Start() {
+		_UpdateCapEmission(transform.localPosition.y);
+	}
+
 	private void Update() {
 		if (_changingLevel != LevelChange.NotChanging) {
 			Vector3 pos = transform.localPosition;
@@ -65,12 +94,13 @@ public class PrismMover : MonoBehaviour {
 			bool
 				aboveTarget = pos.y > _targetHeight,
 				movingUp = _changingLevel == LevelChange.Upwards;
-			if (aboveTarget == movingUp) { // stop
-				// snap to position
+			if (aboveTarget == movingUp) {
+				// stop & snap to position
 				pos.y = _targetHeight;
 				_changingLevel = LevelChange.NotChanging;
 			}
 			transform.localPosition = pos;
+			_UpdateCapEmission(pos.y);
 		}
 	}
 
@@ -94,5 +124,6 @@ public class PrismMover : MonoBehaviour {
 		Vector3 pos = transform.localPosition;
 		pos.y = _targetHeight;
 		transform.localPosition = pos;
+		_UpdateCapEmission(pos.y);
 	}
 }
