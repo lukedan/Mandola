@@ -48,7 +48,7 @@ public class RobotMovement : MonoBehaviour
 
         if (Input.anyKey)
         {
-            if (Input.GetMouseButton(0))
+            if (Input.GetMouseButtonDown(0))
             {
                 animator.SetInteger("Status", (int)AnimStatus.SHOOT);
             }
