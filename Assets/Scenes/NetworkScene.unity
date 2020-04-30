@@ -1358,7 +1358,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mySelectedCharacter: 0
   allCharacters:
-  - {fileID: 5347505519682252453, guid: 856d2e75cac072d4a9feb9d0cdf47745, type: 3}
+  - {fileID: 538313300804161657, guid: 31afdcbc18d8f744f932b58e676046c2, type: 3}
   - {fileID: 5347505519682252453, guid: 100c3a80ea1f5b84eb0ca3778733cfa9, type: 3}
 --- !u!4 &907825471
 Transform:
