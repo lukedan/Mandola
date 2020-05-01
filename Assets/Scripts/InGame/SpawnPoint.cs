@@ -10,11 +10,11 @@ public class SpawnPoint : MonoBehaviour {
 	/// </summary>
 	public float Radius = 1.0f;
 
-	/// <summary>
-	/// Checks if spawning is available.
-	/// </summary>
-	/// <returns>The spawn location, or <code>null</code> if the terrain is not ready.</returns>
-	public Vector3? GetSpawnLocation() {
+    /// <summary>
+    /// Checks if spawning is available.
+    /// </summary>
+    /// <returns>The spawn location, or <code>null</code> if the terrain is not ready.</returns>
+    public Vector3? GetSpawnLocation() {
 		Vector3 xz = transform.position;
 		if (Physics.SphereCast(
 			new Vector3(xz.x, InitialHeight, xz.z), Radius, new Vector3(0.0f, -1.0f, 0.0f),
