@@ -195,15 +195,17 @@ public class BasicGun : GunBase {
 	}
 
 	public override void Reload() {
-		// cannot reload while reloading
-		// cannot reload without reserve bullets
-		if (!IsReloading && NumReserveBullets != 0 && _numClipBullets != ClipSize) {
-			_reloadCooldown = ReloadTime;
-		}
-		// play reloading sound when the clip is not full
-		if (_numClipBullets != ClipSize)
+        // cannot reload while reloading
+        // cannot reload without reserve bullets
+        if (!IsReloading && NumReserveBullets != 0 && _numClipBullets != ClipSize)
         {
-            ReloadAudioSource.Play();
+            _reloadCooldown = ReloadTime;
+
+            // play reloading sound when the clip is not full
+            if (_numClipBullets != ClipSize)
+            {
+                ReloadAudioSource.Play();
+            }
         }
 	}
 	public override void UpdateGun(float deltaTime) {
