@@ -22,11 +22,9 @@ public abstract class GunBase : MonoBehaviour {
 		}
 
 		Aim = transform.position;
-		if (shootingMode) {
-			Ray traceRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-			if (Physics.Raycast(traceRay, out RaycastHit hit, float.PositiveInfinity, 1 << Utils.TerrainLayer)) {
-				Aim = hit.point + new Vector3(0.0f, transform.localPosition.y, 0.0f);
-			}
+		Ray traceRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+		if (Physics.Raycast(traceRay, out RaycastHit hit, float.PositiveInfinity, 1 << Utils.TerrainLayer)) {
+			Aim = hit.point + new Vector3(0.0f, transform.localPosition.y, 0.0f);
 		}
 		UpdateGun(Time.deltaTime);
 	}

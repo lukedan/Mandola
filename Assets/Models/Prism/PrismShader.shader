@@ -4,9 +4,10 @@
     {
         _CapEmission ("Cap Emission Color", Color) = (1, 1, 1, 1)
         _SideEmission ("Side Emission Color", Color) = (1, 1, 1, 1)
-        _EmissionMask("Emission Mask", 2D) = "white" {}
+        _EmissionMask ("Emission Mask", 2D) = "white" {}
 
         _Color ("Base Color", Color) = (1,1,1,1)
+        _Metallic ("Metallic", Range(0, 1)) = 0.5
         _Glossiness ("Smoothness", Range(0,1)) = 0.5
     }
     SubShader
@@ -34,6 +35,7 @@
 
         fixed4 _Color;
         float _Glossiness;
+        float _Metallic;
 
         // Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
         // See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
@@ -56,7 +58,7 @@
             o.Albedo = (1.0f - emission) * _Color.rgb;
             o.Smoothness = lerp(_Glossiness, 1.0f, emission);
 
-            o.Metallic = 1.0f;
+            o.Metallic = _Metallic;
             o.Alpha = 1.0f;
         }
         ENDCG
