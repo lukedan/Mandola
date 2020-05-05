@@ -200,8 +200,11 @@ public class BasicGun : GunBase {
 		if (!IsReloading && NumReserveBullets != 0 && _numClipBullets != ClipSize) {
 			_reloadCooldown = ReloadTime;
 		}
-		// play reloading sound
-		ReloadAudioSource.Play();
+		// play reloading sound when the clip is not full
+		if (_numClipBullets != ClipSize)
+        {
+            ReloadAudioSource.Play();
+        }
 	}
 	public override void UpdateGun(float deltaTime) {
 		Vector3 position = transform.position;
