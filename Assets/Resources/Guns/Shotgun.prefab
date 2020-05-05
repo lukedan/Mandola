@@ -50,7 +50,7 @@ MonoBehaviour:
   ClipSize: 8
   SemiAuto: 1
   FiringDelay: 0.3
-  ReloadTime: 3
+  ReloadTime: 1.5
   AccuracyDistance: 10
   ShootInaccuracy: 1
   MaximumInaccuracy: 2
