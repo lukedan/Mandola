@@ -115,12 +115,6 @@ public class BasicGun : GunBase {
 
 
 	void Start() {
-		var temp = transform;
-		while (temp) {
-			Debug.Log(temp);
-			temp = temp.parent;
-		}
-
 		Transform parent = transform.parent;
 		_network = parent.GetComponent<PhotonView>();
 		if (!_network.IsMine) {
@@ -129,8 +123,8 @@ public class BasicGun : GunBase {
 		}
 		_parentVelocity = parent.GetComponent<CharacterController>();
 
-		_instantReload();
 		CreateBulletBar();
+		Reload();
 	}
 
 	private void CreateBulletBar() {
@@ -192,9 +186,11 @@ public class BasicGun : GunBase {
         ShootAudioSource.PlayOneShot(ShootAudioClip);
     }
 
+
 	public override void Reload() {
-        // cannot reload while reloading
-        // cannot reload without reserve bullets
+		// cannot reload while reloading
+		// cannot reload without reserve bullets
+		// cannot reload when clip is full
         if (!IsReloading && NumReserveBullets != 0 && _numClipBullets != ClipSize)
         {
             _reloadCooldown = ReloadTime;
@@ -263,5 +259,11 @@ public class BasicGun : GunBase {
 
 	public bool IsBulletClipFull() {
 		return ClipSize == _numClipBullets;
+	}
+
+
+	public override void OnDestroying() {
+		base.OnDestroying();
+		Destroy(bulletBar.gameObject);
 	}
 }

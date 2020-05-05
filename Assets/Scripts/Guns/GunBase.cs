@@ -6,6 +6,8 @@ using UnityEngine;
 // NOTE: if you're going to inherit from this, DO NOT reimplement the update() function. Override UpdateGun() and
 // Reload() instead.
 public abstract class GunBase : MonoBehaviour {
+	public string Identifier;
+
 	public bool IsPlayerInShootingMode =>
 		!InGameCommon.CurrentGame.IsPaused &&
 		transform.parent.GetComponent<PlayerGeneralInfo>().ControlState == PlayerControlState.Shooting;
@@ -31,4 +33,7 @@ public abstract class GunBase : MonoBehaviour {
 
 	public abstract void Reload();
 	public abstract void UpdateGun(float deltaTime);
+	public virtual void OnDestroying() {
+		// nothing to do
+	}
 }

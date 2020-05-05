@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d039f322f3412924e8ce1183393b78c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Identifier: SMG
   ClipSize: 32
   SemiAuto: 0
   FiringDelay: 0.05

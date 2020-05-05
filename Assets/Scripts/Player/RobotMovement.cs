@@ -13,20 +13,19 @@ enum AnimStatus {
 
 public class RobotMovement : MonoBehaviour {
 	private Animator _animator;
-	private GunBase _aim;
 	private CharacterController _move;
 
 	private void Start() {
 		_animator = GetComponent<Animator>();
 
 		Transform parent = transform.parent;
-		_aim = parent.GetComponentInChildren<GunBase>();
 		_move = parent.GetComponent<CharacterController>();
 	}
 
 	// Update is called once per frame
 	void Update() {
-		Vector3 aimDir = _aim.Aim - transform.parent.position;
+		GunBase gun = transform.parent.GetComponentInChildren<GunBase>();
+		Vector3 aimDir = gun.Aim - transform.parent.position;
 		Vector3 vel = _move.velocity;
 		Vector2 aimDirXZ = new Vector2(aimDir.x, aimDir.z).normalized;
 		Vector2 velXZ = new Vector2(vel.x, vel.z);
@@ -35,7 +34,7 @@ public class RobotMovement : MonoBehaviour {
 		_animator.SetFloat("Forward", forward);
 		_animator.SetFloat("Strafe", strafe);
 		_animator.SetBool("Grounded", _move.isGrounded);
-		_animator.SetBool("Reloading", _aim.IsReloading);
+		_animator.SetBool("Reloading", gun.IsReloading);
 
 		transform.localRotation = Quaternion.FromToRotation(new Vector3(0.0f, 0.0f, 1.0f), new Vector3(aimDirXZ.x, 0.0f, aimDirXZ.y));
 	}
