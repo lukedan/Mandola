@@ -71,11 +71,11 @@ Material:
     - _DstBlend: 0
     - _EmissionThreshold: 1
     - _GlossMapScale: 1
-    - _Glossiness: 1
+    - _Glossiness: 0.2
     - _GlossyReflections: 1
     - _HighestHeight: 9
     - _LowestHeight: 1
-    - _Metallic: 1
+    - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
@@ -88,6 +88,6 @@ Material:
     - _CapColorHighest: {r: 1, g: 1, b: 1, a: 1}
     - _CapColorLowest: {r: 0, g: 0, b: 0, a: 1}
     - _CapEmission: {r: 1, g: 0, b: 0, a: 1}
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 1, g: 1, b: 0, a: 1}
     - _EmissionColor: {r: 1.0039216, g: 1.0039216, b: 1.0039216, a: 1}
     - _SideEmission: {r: 1, g: 1, b: 1, a: 1}
