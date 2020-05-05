@@ -16,7 +16,7 @@ public class GunSwitching : MonoBehaviour {
 				if (prefab.GetComponent<GunBase>().Identifier != gunInHand.Identifier) {
 					gunInHand.transform.parent = null;
 					gunInHand.OnDestroying();
-					Destroy(gunInHand);
+					Destroy(gunInHand.gameObject);
 					GameObject newGun = Instantiate(prefab);
 					newGun.transform.parent = transform;
 					newGun.transform.localPosition = LocalPos;
