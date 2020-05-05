@@ -114,12 +114,6 @@ public class BasicGun : GunBase {
 
 
 	void Start() {
-		var temp = transform;
-		while (temp) {
-			Debug.Log(temp);
-			temp = temp.parent;
-		}
-
 		Transform parent = transform.parent;
 		_network = parent.GetComponent<PhotonView>();
 		if (!_network.IsMine) {
@@ -128,8 +122,8 @@ public class BasicGun : GunBase {
 		}
 		_parentVelocity = parent.GetComponent<CharacterController>();
 
-		_instantReload();
 		CreateBulletBar();
+		Reload();
 	}
 
 	private void CreateBulletBar() {
@@ -187,6 +181,7 @@ public class BasicGun : GunBase {
 		// TODO if the players are not happy with this non-WYSIWYG velocity, compensate for player velocity
 		bullet.Velocity = direction * BulletSpeed + _parentVelocity.velocity;
 		bullet.Damage = BulletDamage;
+
 		// play shooting sound
 		ShootAudioSources[_shootAudioSrcIdx++].Play();
 		if (_shootAudioSrcIdx == 5) {
@@ -195,8 +190,9 @@ public class BasicGun : GunBase {
 	}
 
 	public override void Reload() {
-        // cannot reload while reloading
-        // cannot reload without reserve bullets
+		// cannot reload while reloading
+		// cannot reload without reserve bullets
+		// cannot reload when clip is full
         if (!IsReloading && NumReserveBullets != 0 && _numClipBullets != ClipSize)
         {
             _reloadCooldown = ReloadTime;
@@ -265,5 +261,11 @@ public class BasicGun : GunBase {
 
 	public bool IsBulletClipFull() {
 		return ClipSize == _numClipBullets;
+	}
+
+
+	public override void OnDestroying() {
+		base.OnDestroying();
+		Destroy(bulletBar.gameObject);
 	}
 }

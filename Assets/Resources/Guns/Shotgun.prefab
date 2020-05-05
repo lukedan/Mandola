@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17166b330e3a5d840a505afa0dea602e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Identifier: Shotgun
   ClipSize: 8
   SemiAuto: 1
   FiringDelay: 0.3
@@ -60,9 +61,19 @@ MonoBehaviour:
     type: 3}
   BulletSpeed: 50
   FireOffset: 1
+  ShootAudioSources:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  ReloadAudioSource: {fileID: 0}
   NumReserveBullets: -1
   AimIndicator: {fileID: 1669974915168516615}
-  bulletBarPrefab: {fileID: 0}
+  bulletBarPrefab: {fileID: 3404214674349633901, guid: f106d95fe46c8b442abfabdf939114fe,
+    type: 3}
+  bulletBarColor: {r: 0, g: 0, b: 0, a: 0}
+  bulletReloadingColor: {r: 0, g: 0, b: 0, a: 0}
   NumPallets: 7
 --- !u!1001 &4745722817049177341
 PrefabInstance:

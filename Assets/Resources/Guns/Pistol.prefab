@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d039f322f3412924e8ce1183393b78c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Identifier: Pistol
   ClipSize: 15
   SemiAuto: 1
   FiringDelay: 0
@@ -54,16 +55,25 @@ MonoBehaviour:
   AccuracyRestore: 1
   BulletColor: {r: 0, g: 1, b: 1, a: 1}
   BulletColorIntensity: 2
-  BulletDamage: 0.2
+  BulletDamage: 0.5
   MaxBulletBounces: 5
   BulletPrefab: {fileID: 8013300514214558543, guid: 8e8b65732032bb545a48f635ea492b59,
     type: 3}
   BulletSpeed: 50
   FireOffset: 1
+  ShootAudioSources:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  ReloadAudioSource: {fileID: 0}
   NumReserveBullets: -1
   AimIndicator: {fileID: 4568322729719187386}
-  bulletBarPrefab: {fileID: -7156405144664765674, guid: f106d95fe46c8b442abfabdf939114fe,
+  bulletBarPrefab: {fileID: 3404214674349633901, guid: f106d95fe46c8b442abfabdf939114fe,
     type: 3}
+  bulletBarColor: {r: 0, g: 0, b: 0, a: 0}
+  bulletReloadingColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1001 &7608041871692091712
 PrefabInstance:
   m_ObjectHideFlags: 0

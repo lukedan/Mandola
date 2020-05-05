@@ -113,7 +113,7 @@ public class PlayerGeneralInfo : MonoBehaviour, IPunInstantiateMagicCallback {
 		_damageEffect.intensity.Override(Mathf.Min(
 			_damageEffect.intensity.value + DamageEffectExaggeration, DamageEffectClamp
 		));
-		if (Health < 0.0f) {
+		if (Health <= 0.0f) {
 			// drop flag
 			Flag flag = GetComponentInChildren<Flag>();
 			if (flag) {

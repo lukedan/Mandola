@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 2272352830137483709}
   - component: {fileID: 3645931372282962622}
   - component: {fileID: 6815913779286827142}
+  - component: {fileID: 3706560305881345494}
   - component: {fileID: 1644150536033365623}
   m_Layer: 10
   m_Name: PlayerAvatar
@@ -131,6 +132,27 @@ MonoBehaviour:
   Team: 0
   healthBarPrefab: {fileID: 2406784933592585804, guid: 99d04a4c7211d6d4d878c54055631044,
     type: 3}
+--- !u!114 &3706560305881345494
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5347505519682252453}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85df90a45d8951a439c3df427d37ee3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GunPrefabs:
+  - {fileID: 6504773663042107300, guid: 2f2b6a662ff836e4ab86ff90b8d3a4ea, type: 3}
+  - {fileID: 6504773663042107300, guid: c7eb2e76ba24f5d40b9543d6c1dba328, type: 3}
+  - {fileID: 6504773663042107300, guid: 2b0b22728e06c9c4893961561cad4f40, type: 3}
+  SwitchGunKeys:
+  - z
+  - x
+  - c
+  LocalPos: {x: 0, y: 0.9, z: 0}
 --- !u!114 &1644150536033365623
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -164,11 +186,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1447078242821564886}
     m_Modifications:
-    - target: {fileID: 745114428927212277, guid: 2b0b22728e06c9c4893961561cad4f40,
-        type: 3}
-      propertyPath: NumReserveBullets
-      value: 2147483647
-      objectReference: {fileID: 0}
     - target: {fileID: 6504773663042107300, guid: 2b0b22728e06c9c4893961561cad4f40,
         type: 3}
       propertyPath: m_Name
