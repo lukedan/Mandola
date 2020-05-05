@@ -64,7 +64,7 @@ MonoBehaviour:
   BulletSpeed: 50
   FireOffset: 1
   ShootAudioSource: {fileID: 1545189434913007054}
-  ShootAudioClip: {fileID: 8300000, guid: d11f3a972dc02fc4ea83add1843e4401, type: 3}
+  ShootAudioClip: {fileID: 8300000, guid: 99f978ed22a5cf44aa7431508ed56abf, type: 3}
   ReloadAudioSource: {fileID: 5889359464883027096}
   NumReserveBullets: -1
   AimIndicator: {fileID: 1669974915168516615}
@@ -114,9 +114,9 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: d11f3a972dc02fc4ea83add1843e4401, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 99f978ed22a5cf44aa7431508ed56abf, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.6
   m_Pitch: 1
   Loop: 0
   Mute: 0

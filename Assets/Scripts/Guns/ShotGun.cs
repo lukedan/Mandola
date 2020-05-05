@@ -17,6 +17,7 @@ public class ShotGun : BasicGun {
 			Bullet bullet = _CreateBullet(position + direction * FireOffset);
 			bullet.Velocity = palletDir * BulletSpeed + _parentVelocity.velocity;
 			bullet.Damage = BulletDamage;
-		}
+            ShootAudioSource.PlayOneShot(ShootAudioClip);
+        }
 	}
 }
