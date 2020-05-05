@@ -71,10 +71,11 @@ public class BasicGun : GunBase {
 	/// intersecting with the player himself.
 	/// </summary>
 	public float FireOffset = 1.0f;
-	/// <summary>
-	/// The gun's shooting sound source
-	/// </summary>
-	public AudioSource[] ShootAudioSources = new AudioSource[5];
+    /// <summary>
+    /// The gun's shooting sound source
+    /// </summary>
+    public AudioSource ShootAudioSource;
+    public AudioClip ShootAudioClip;
 	/// <summary>
 	/// The gun's reloading sound source
 	/// </summary>
@@ -187,12 +188,9 @@ public class BasicGun : GunBase {
 		// TODO if the players are not happy with this non-WYSIWYG velocity, compensate for player velocity
 		bullet.Velocity = direction * BulletSpeed + _parentVelocity.velocity;
 		bullet.Damage = BulletDamage;
-		// play shooting sound
-		ShootAudioSources[_shootAudioSrcIdx++].Play();
-		if (_shootAudioSrcIdx == 5) {
-			_shootAudioSrcIdx = 0;
-		}
-	}
+        // play shooting sound
+        ShootAudioSource.PlayOneShot(ShootAudioClip);
+    }
 
 	public override void Reload() {
         // cannot reload while reloading
