@@ -68,12 +68,6 @@ public class PlayerGeneralInfo : MonoBehaviour, IPunInstantiateMagicCallback {
 		if (_network.IsMine) {
 			CreateHealthBar();
 		}
-		Teams teams = InGameCommon.CurrentGame.GetComponent<Teams>();
-		if (Team < teams.Colors.Count) {
-			TeamIndicator.material.color = teams.Colors[InGameCommon.CurrentGame.PlayerTeam];
-		} else {
-			TeamIndicator.enabled = false;
-		}
 	}
 
 	private void CreateHealthBar() {
@@ -116,6 +110,16 @@ public class PlayerGeneralInfo : MonoBehaviour, IPunInstantiateMagicCallback {
 		Team = (int)info.photonView.InstantiationData[0];
 		int characterID = (int)info.photonView.InstantiationData[1];
 		Instantiate(PlayerInfo.PI.allCharacters[characterID], transform.position, transform.rotation, transform);
+
+		// set team indicator color
+		if (TeamIndicator) {
+			Teams teams = InGameCommon.CurrentGame.GetComponent<Teams>();
+			if (Team < teams.Colors.Count) {
+				TeamIndicator.material.color = teams.Colors[Team];
+			} else {
+				TeamIndicator.enabled = false;
+			}
+		}
 	}
 
 	/// <summary>
