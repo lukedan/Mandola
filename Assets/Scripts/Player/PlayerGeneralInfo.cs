@@ -48,6 +48,7 @@ public class PlayerGeneralInfo : MonoBehaviour, IPunInstantiateMagicCallback {
 	/// The team this player belongs to.
 	/// </summary>
 	public int Team = 0;
+	public MeshRenderer TeamIndicator;
 
 	private float _healthRegenCd = 0.0f;
 
@@ -66,6 +67,12 @@ public class PlayerGeneralInfo : MonoBehaviour, IPunInstantiateMagicCallback {
 		InGameCommon.CurrentGame.PlayerAvatars[_network.CreatorActorNr] = gameObject;
 		if (_network.IsMine) {
 			CreateHealthBar();
+		}
+		Teams teams = InGameCommon.CurrentGame.GetComponent<Teams>();
+		if (Team < teams.Colors.Count) {
+			TeamIndicator.material.color = teams.Colors[InGameCommon.CurrentGame.PlayerTeam];
+		} else {
+			TeamIndicator.enabled = false;
 		}
 	}
 
@@ -93,6 +100,15 @@ public class PlayerGeneralInfo : MonoBehaviour, IPunInstantiateMagicCallback {
 		// Update health bar
 		if (_healthBar) {
 			_healthBar.setHealth(Health);
+		}
+
+		// update team indicator
+		if (TeamIndicator) {
+			if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, float.MaxValue, 1 << Utils.TerrainLayer)) {
+				TeamIndicator.transform.localPosition = new Vector3(0.0f, -hit.distance, 0.0f);
+			} else {
+				TeamIndicator.transform.localPosition = Vector3.zero;
+			}
 		}
 	}
 

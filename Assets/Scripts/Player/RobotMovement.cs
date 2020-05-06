@@ -20,9 +20,6 @@ public class RobotMovement : MonoBehaviour {
 
 		Transform parent = transform.parent;
 		_move = parent.GetComponent<CharacterController>();
-
-		Teams teams = InGameCommon.CurrentGame.GetComponent<Teams>();
-		transform.GetChild(7).GetComponent<MeshRenderer>().material.color = teams.Colors[InGameCommon.CurrentGame.PlayerTeam];
 	}
 
 	// Update is called once per frame

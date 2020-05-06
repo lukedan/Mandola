@@ -63,6 +63,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _SmoothnessMask:
+        m_Texture: {fileID: 2800000, guid: 48754daec34c6d2479c67b5fae6d0b2c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Floats:
     - _BumpScale: 1
     - _CapColorIntensity: 1
@@ -72,10 +76,12 @@ Material:
     - _EmissionThreshold: 1
     - _GlossMapScale: 1
     - _Glossiness: 0.2
+    - _GlossinessMax: 0.7
+    - _GlossinessMin: 0
     - _GlossyReflections: 1
     - _HighestHeight: 9
     - _LowestHeight: 1
-    - _Metallic: 0
+    - _Metallic: 1
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
@@ -88,6 +94,6 @@ Material:
     - _CapColorHighest: {r: 1, g: 1, b: 1, a: 1}
     - _CapColorLowest: {r: 0, g: 0, b: 0, a: 1}
     - _CapEmission: {r: 1, g: 0, b: 0, a: 1}
-    - _Color: {r: 1, g: 1, b: 0, a: 1}
+    - _Color: {r: 0.6226415, g: 0.6226415, b: 0.6226415, a: 1}
     - _EmissionColor: {r: 1.0039216, g: 1.0039216, b: 1.0039216, a: 1}
     - _SideEmission: {r: 1, g: 1, b: 1, a: 1}

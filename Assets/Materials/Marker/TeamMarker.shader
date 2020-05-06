@@ -10,6 +10,7 @@
         {
             Tags { "RenderType" = "Opaque" }
             LOD 200
+            Offset -1, -1
 
             CGPROGRAM
             // Physically based Standard lighting model, and enable shadows on all light types
@@ -40,7 +41,7 @@
                 fixed4 c = 1 - tex2D(_MainTex, IN.uv_MainTex);
                 clip(c.r - _Cutoff);
 
-                o.Emission.rgb = c.rgb * _Color;
+                o.Emission.rgb = _Color;
 
                 o.Alpha = c.a;
             }

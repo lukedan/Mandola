@@ -3,12 +3,13 @@
     Properties
     {
         _CapEmission ("Cap Emission Color", Color) = (1, 1, 1, 1)
-        _SideEmission ("Side Emission Color", Color) = (1, 1, 1, 1)
-        _EmissionMask ("Emission Mask", 2D) = "white" {}
+        _Side ("Side Color", Color) = (1, 1, 1, 1)
+        _SmoothnessMask ("Smoothness Mask", 2D) = "white" {}
 
         _Color ("Base Color", Color) = (1,1,1,1)
         _Metallic ("Metallic", Range(0, 1)) = 0.5
-        _Glossiness ("Smoothness", Range(0,1)) = 0.5
+        _GlossinessMin ("Min Smoothness", Range(0,1)) = 0.0
+        _GlossinessMax("Max Smoothness", Range(0, 1)) = 1.0
     }
     SubShader
     {
@@ -22,19 +23,19 @@
         // Use shader model 3.0 target, to get nicer looking lighting
         #pragma target 3.0
 
-        sampler2D _EmissionMask;
+        sampler2D _SmoothnessMask;
 
         struct Input
         {
-            float2 uv_EmissionMask;
+            float2 uv_SmoothnessMask;
             float3 worldNormal;
             float3 worldPos;
         };
 
-        fixed4 _SideEmission;
+        fixed4 _Side;
 
-        fixed4 _Color;
-        float _Glossiness;
+        float _GlossinessMin;
+        float _GlossinessMax;
         float _Metallic;
 
         // Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
@@ -47,16 +48,15 @@
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
             float caps = abs(dot(IN.worldNormal, float3(0.0f, 1.0f, 0.0f)));
-            float emission = tex2D(_EmissionMask, IN.uv_EmissionMask).x;
+            float smoothness = tex2D(_SmoothnessMask, IN.uv_SmoothnessMask).x;
 
             // Albedo comes from a texture tinted by color
             if (caps > 0.5f) {
-                o.Emission = emission * UNITY_ACCESS_INSTANCED_PROP(Props, _CapEmission);
+                o.Albedo = UNITY_ACCESS_INSTANCED_PROP(Props, _CapEmission);
             } else {
-                o.Emission = emission * _SideEmission;
+                o.Albedo = _Side.rgb;
             }
-            o.Albedo = (1.0f - emission) * _Color.rgb;
-            o.Smoothness = lerp(_Glossiness, 1.0f, emission);
+            o.Smoothness = lerp(_GlossinessMin, _GlossinessMax, smoothness.r);
 
             o.Metallic = _Metallic;
             o.Alpha = 1.0f;
